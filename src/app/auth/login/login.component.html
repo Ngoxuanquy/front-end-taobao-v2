@@ -1,0 +1,18 @@
+<h2>Login</h2>
+<p>{{ message }}</p>
+<form [formGroup]="login_value">
+  <label for="first-name">First Name: </label>
+  <input id="first-name" type="text" formControlName="email" />
+  <br />
+  <label for="last-name">Last Name: </label>
+  <input id="last-name" type="text" formControlName="password" />
+</form>
+
+<p>
+  <button type="button" (click)="login()" *ngIf="!authService.isLoggedIn">
+    Login
+  </button>
+  <button type="button" (click)="logout()" *ngIf="authService.isLoggedIn">
+    Logout
+  </button>
+</p>
