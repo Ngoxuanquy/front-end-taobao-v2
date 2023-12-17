@@ -1,0 +1,13 @@
+<h2>Thông tin sách</h2>
+<p></p>
+<form [formGroup]="login_value">
+  <label for="first-name">Tên sản phẩm: </label>
+  <input id="first-name" type="text" formControlName="name" />
+  <br />
+  <label for="last-name">Số lương ban đầu </label>
+  <input id="last-name" type="text" formControlName="quantity" />
+  <label for="last-name">Kiểu </label>
+  <input id="last-name" type="text" formControlName="type" />
+
+  <button (click)="CreateBook()">Gửi</button>
+</form>

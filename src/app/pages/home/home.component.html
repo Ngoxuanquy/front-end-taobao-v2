@@ -1,3 +1,187 @@
-<div>
-  <div>list product</div>
+<label> Tìm kiếm theo tên </label>
+<input [(ngModel)]="name_search" (ngModelChange)="onNameSearchChange()" />
+
+<label> Tìm kiếm theo đầu sách </label>
+<input [(ngModel)]="type_search" (ngModelChange)="onTypeSearchChange()" />
+<div class="isloading" *ngIf="isLoading == true">
+  <app-loadding></app-loadding>
 </div>
+
+<div *ngIf="isLoadingMuon == true">
+  <app-muonSach></app-muonSach>
+</div>
+
+<nz-modal
+  [(nzVisible)]="isVisibleCalendar"
+  nzTitle="Ngày trả"
+  (nzOnCancel)="handleCancelCalendar()"
+  (nzOnOk)="handleOkCalendar()"
+>
+  <div>aaaaaaaaaa</div>
+
+  <nz-calendar
+    [nzFullscreen]="true"
+    (nzSelectChange)="onValueChange($event)"
+    (nzPanelChange)="onPanelChange($event)"
+  ></nz-calendar>
+</nz-modal>
+
+<!-- Mượn sách -->
+<nz-modal
+  [(nzVisible)]="isVisibleMuon"
+  nzTitle="Chi tiết sách"
+  (nzOnCancel)="handleCancelMuon()"
+  (nzOnOk)="handleOkMuon()"
+>
+  <ng-container *nzModalContent>
+    <div class="modal-form">
+      <div>Thông tin sách</div>
+      <div class="form-group">
+        <label for="bookName">Tên sách:</label>
+        <input
+          id="bookName"
+          type="text"
+          class="form-control"
+          [(ngModel)]="nameDetailMuon"
+        />
+      </div>
+      <div class="form-group">
+        <label for="initialQuantity">Số lượng ban đầu:</label>
+        <input
+          id="initialQuantity"
+          type="number"
+          class="form-control"
+          [(ngModel)]="SoluongDetailMuon"
+        />
+      </div>
+      <div class="form-group">
+        <label for="bookType">Type:</label>
+        <input
+          id="bookType"
+          type="text"
+          class="form-control"
+          [(ngModel)]="typeDetailMuon"
+        />
+      </div>
+    </div>
+    <div>
+      <div>Thông tin người mượn</div>
+      <div>
+        <label for=""> Tên người mượn </label>
+        <input placeholder="Tên người mượn ..." />
+      </div>
+      <div>
+        <label for=""> Số điện thoại </label>
+        <input placeholder="Số điên thoại ..." />
+      </div>
+      <div>
+        <label for=""> Ngày trả </label>
+        <div class="ngaytra" (click)="hanldeNgayTra()">
+          <input placeholder="Ngày trả..." />
+          <span
+            nz-icon
+            nzType="calendar"
+            nzTheme="outline"
+            class="calendar"
+          ></span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>
+
+<!-- Chi tiết sách -->
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Chi tiết sách"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+>
+  <ng-container *nzModalContent>
+    <div class="modal-form">
+      <div class="form-group">
+        <label for="bookName">Tên sách:</label>
+        <input
+          id="bookName"
+          type="text"
+          class="form-control"
+          [(ngModel)]="nameDetail"
+        />
+      </div>
+      <div class="form-group">
+        <label for="initialQuantity">Số lượng ban đầu:</label>
+        <input
+          id="initialQuantity"
+          type="number"
+          class="form-control"
+          [(ngModel)]="SoluongDetail"
+        />
+      </div>
+      <div class="form-group">
+        <label for="bookType">Type:</label>
+        <input
+          id="bookType"
+          type="text"
+          class="form-control"
+          [(ngModel)]="typeDetail"
+        />
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>
+
+<table class="table" *ngIf="datas.length > 0">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Tên sản phẩm</th>
+      <th scope="col">Số lượng ban đầu</th>
+      <th scope="col">Số lượng còn</th>
+      <th scope="col">Thể Loại</th>
+      <th scope="col">Trạng thái</th>
+      <th scope="col">#</th>
+
+      <th scope="col">Sửa</th>
+      <th scope="col">Xóa</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of datas; let i = index" id="book-row-{{ item._id }}">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ item.name_book }}</td>
+      <td>{{ item.number_of_remaining }}</td>
+      <td>{{ item.original_number }}</td>
+      <td>{{ item.type }}</td>
+
+      <td *ngIf="item.original_number > 0" class="book-status book-available">
+        Còn sách
+      </td>
+      <td
+        *ngIf="item.original_number <= 0"
+        class="book-status book-out-of-stock"
+      >
+        Hết sách
+      </td>
+      <td *ngIf="item.original_number > 0">
+        <button (click)="hanldeMuon(item)">Mượn</button>
+      </td>
+      <td *ngIf="item.original_number <= 0">
+        <button [disabled]="item.original_number <= 0">Mượn</button>
+      </td>
+      <td>
+        <button nz-button (click)="showModal(item)" class="edit-button">
+          <span>Sửa</span>
+        </button>
+      </td>
+      <td>
+        <button (click)="handleDelete(item._id)">Xóa</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="datas.length <= 0">Không có sản phẩm nào</div>
+<nz-pagination
+  [nzPageIndex]="1"
+  [nzTotal]="100"
+  (nzPageIndexChange)="onPageChange($event)"
+></nz-pagination>

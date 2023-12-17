@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from '../../pages/home/home.component';
-import { WelcomeComponent } from '../../pages/welcome/welcome.component';
 import { Layout_containerComponent } from './layout_container.component';
+import { CreateBookComponent } from '../../pages/createBook/createBook.component';
 
 export const WELCOME_ROUTES: Routes = [
   {
@@ -10,7 +10,10 @@ export const WELCOME_ROUTES: Routes = [
     children: [
       {
         path: '',
-        children: [{ path: 'welcome', component: WelcomeComponent }],
+        children: [
+          { path: 'listbooks', component: HomeComponent },
+          { path: 'createBooks', component: CreateBookComponent },
+        ],
       },
     ],
   },

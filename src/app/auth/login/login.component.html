@@ -1,18 +1,19 @@
-<h2>Login</h2>
-<p>{{ message }}</p>
-<form [formGroup]="login_value">
-  <label for="first-name">First Name: </label>
-  <input id="first-name" type="text" formControlName="email" />
-  <br />
-  <label for="last-name">Last Name: </label>
-  <input id="last-name" type="text" formControlName="password" />
-</form>
+<div class="container">
+  <!-- <p>{{ message }}</p> -->
+  <div class="isloading" *ngIf="isLoading == true">
+    <app-loadding></app-loadding>
+  </div>
+  <form [formGroup]="login_value">
+    <h2>Đăng nhập</h2>
 
-<p>
-  <button type="button" (click)="login()" *ngIf="!authService.isLoggedIn">
-    Login
-  </button>
-  <button type="button" (click)="logout()" *ngIf="authService.isLoggedIn">
-    Logout
-  </button>
-</p>
+    <label for="first-name">Email: </label>
+    <input id="first-name" type="text" formControlName="email" />
+    <br />
+    <label for="last-name">Mật khẩu: </label>
+    <input id="last-name" type="text" formControlName="password" />
+
+    <p>
+      <button type="button" (click)="login()">Login</button>
+    </p>
+  </form>
+</div>

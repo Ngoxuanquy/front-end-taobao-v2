@@ -1,0 +1,23 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Chi tiết sách"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+>
+  <ng-container *nzModalContent>
+    <div class="modal-form">
+      <div class="form-group">
+        <label for="bookName">Tên sách:</label>
+        <input id="bookName" type="text" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label for="initialQuantity">Số lượng ban đầu:</label>
+        <input id="initialQuantity" type="number" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label for="bookType">Type:</label>
+        <input id="bookType" type="text" class="form-control" />
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>
