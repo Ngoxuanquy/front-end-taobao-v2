@@ -7,13 +7,13 @@ import { CookieService } from 'ngx-cookie-service';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private cookieService: CookieService) {
-    // Check for the presence of a token during service initialization
-    this.isLoggedIn = this.cookieService.check('token');
-    console.log(this.cookieService.check('token'));
-  }
+  constructor(private cookieService: CookieService) {}
 
-  isLoggedIn;
+  isLoggedIn = false;
+
+  // get isLoggedIn(): any {
+  //   return this.cookieService.check('token');
+  // }
 
   // store the URL so we can redirect after logging in
 
@@ -30,5 +30,9 @@ export class AuthService {
   logout(): void {
     this.isLoggedIn = false;
     this.cookieService.delete('token');
+  }
+
+  setIsLogin(state: boolean) {
+    this.isLoggedIn = state;
   }
 }

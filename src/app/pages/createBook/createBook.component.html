@@ -1,3 +1,4 @@
+<!-- Assuming this is your template file (HTML) -->
 <h2>Thông tin sách</h2>
 <p></p>
 <form [formGroup]="login_value">
@@ -7,7 +8,20 @@
   <label for="last-name">Số lương ban đầu </label>
   <input id="last-name" type="text" formControlName="quantity" />
   <label for="last-name">Kiểu </label>
-  <input id="last-name" type="text" formControlName="type" />
-
+  <nz-select
+    [(ngModel)]="login_value.value.selectedValue"
+    (nzOpenChange)="onSelectChange($event)"
+    formControlName="selectedValue"
+    nzAllowClear
+    nzPlaceHolder="Choose"
+  >
+    <nz-option
+      *ngFor="let data of datas"
+      [nzLabel]="data.type_Book"
+      [nzValue]="data._id"
+    >
+    </nz-option>
+  </nz-select>
+  <br />
   <button (click)="CreateBook()">Gửi</button>
 </form>

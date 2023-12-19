@@ -1,0 +1,34 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Thêm đầu sách"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+>
+  <ng-container *nzModalContent>
+    <div>
+      <label> Đầu sách </label>
+      <input [(ngModel)]="name_type" />
+    </div>
+  </ng-container>
+</nz-modal>
+
+<button class="button_Them" (click)="ModalThem()">Thêm</button>
+
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Danh mục</th>
+      <th scope="col">#</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of datas; let i = index" id="book-row-{{ item._id }}">
+      <th scope="row">{{ i + 1 }}</th>
+      <th scope="row">{{ item.type_Book }}</th>
+      <th scope="row">
+        <button>Xóa</button>
+      </th>
+    </tr>
+  </tbody>
+</table>
