@@ -26,8 +26,12 @@
     <tr *ngFor="let item of datas; let i = index" id="book-row-{{ item._id }}">
       <th scope="row">{{ i + 1 }}</th>
       <th scope="row">{{ item.type_Book }}</th>
-      <th scope="row">
-        <button>Xóa</button>
+      <th scope="row" *ngIf="item.TrangThai == 'Không được xóa'">
+        <button [disabled]="item.TrangThai == 'Không được xóa'">Xóa</button>
+      </th>
+
+      <th scope="row" *ngIf="item.TrangThai == 'Được xóa'">
+        <button (click)="handleDelete(item._id)">Xóa</button>
       </th>
     </tr>
   </tbody>

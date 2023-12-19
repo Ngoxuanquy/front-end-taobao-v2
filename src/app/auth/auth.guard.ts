@@ -1,20 +1,29 @@
-import { inject } from '@angular/core';
-import { Router, NavigationExtras } from '@angular/router';
+import { Injectable } from '@angular/core';
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router,
+  UrlTree,
+} from '@angular/router';
 import { AuthService } from './auth.service';
 
-export const authGuard = () => {
-  const router = inject(Router);
-  const authService = inject(AuthService);
+@Injectable({
+  providedIn: 'root',
+})
+export class authGuard implements CanActivate {
+  constructor(private authService: AuthService, private router: Router) {}
 
-  console.log(authService.isLoggedIn);
-
-  if (authService.isLoggedIn == true) {
-    return true;
-  } else {
-    // Create a dummy session id
-    // Navigate to the login page with extras
-    router.navigate(['auth/login']);
-
-    return false;
+  canActivate(
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): boolean | UrlTree {
+    if (this.authService.isLoggedIn) {
+      return true;
+    } else {
+      // Create a dummy session id
+      // Navigate to the login page with extras
+      return this.router.createUrlTree(['/auth/login']);
+    }
   }
-};
+}

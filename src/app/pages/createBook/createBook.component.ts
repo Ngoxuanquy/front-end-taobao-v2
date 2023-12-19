@@ -37,11 +37,14 @@ export class CreateBookComponent implements OnInit {
   datas: any[] = [];
   selectedValue: any;
 
+  // lấy kiểu (đầu sách)
   onSelectChange(value: any): void {
     this.selectedValue = value;
     console.log('Selected value:', this.selectedValue);
   }
-  login_value: any = new FormGroup({
+
+  //dữ liệu khi tạo thêm sách lấy từ form
+  create_value: any = new FormGroup({
     name: new FormControl(''),
     selectedValue: new FormControl(''),
     quantity: new FormControl(''),
@@ -63,10 +66,10 @@ export class CreateBookComponent implements OnInit {
     };
   }
 
+  //lấy kiểu để select (kiểu sách)
   getData(page: Number): Observable<any> {
     const accessToken = this.cookieService.get('token');
 
-    console.log(accessToken);
     // Thêm header vào yêu cầu
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -88,11 +91,9 @@ export class CreateBookComponent implements OnInit {
       );
   }
 
+  // hàm create sách
   postBook(): any {
     const accessToken = this.cookieService.get('token');
-
-    console.log({ accessToken });
-
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'x-api-key':
@@ -105,10 +106,10 @@ export class CreateBookComponent implements OnInit {
       .post<any>(
         `${this.apiUrl}/book/createBook`,
         {
-          name_book: this.login_value.value.name,
-          number_of_remaining: Number(this.login_value.value.quantity),
-          original_number: Number(this.login_value.value.quantity),
-          type: this.login_value.value.selectedValue,
+          name_book: this.create_value.value.name,
+          number_of_remaining: Number(this.create_value.value.quantity),
+          original_number: Number(this.create_value.value.quantity),
+          type: this.create_value.value.selectedValue,
         },
         { headers: headers }
       )
@@ -124,10 +125,18 @@ export class CreateBookComponent implements OnInit {
       );
   }
 
+  // xử lý nút Gửi request dùng subscribe để chạy hàm postBook
   CreateBook(): any {
-    console.log(this.login_value);
-    this.postBook().subscribe((response: any) => {
-      console.log(response);
-    });
+    if (
+      this.create_value.value.name != '' &&
+      this.create_value.value.quantity != null &&
+      this.create_value.value.selectedValue
+    ) {
+      this.postBook().subscribe((response: any) => {
+        console.log(response);
+      });
+    } else {
+      alert('Vui lòng nhập đủ thông tin');
+    }
   }
 }

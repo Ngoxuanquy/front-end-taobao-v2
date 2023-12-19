@@ -9,16 +9,13 @@ import { CookieService } from 'ngx-cookie-service';
 export class AuthService {
   constructor(private cookieService: CookieService) {}
 
-  isLoggedIn = false;
+  isLoggedIn: boolean = this.cookieService.check('token');
 
   // get isLoggedIn(): any {
   //   return this.cookieService.check('token');
   // }
 
-  // store the URL so we can redirect after logging in
-
   login(): Observable<boolean> {
-    // Simulate login and set the token in the cookie
     return of(true).pipe(
       delay(1000),
       tap(() => {

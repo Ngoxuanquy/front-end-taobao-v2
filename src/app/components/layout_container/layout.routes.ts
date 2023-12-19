@@ -10,11 +10,11 @@ export const WELCOME_ROUTES: Routes = [
   {
     path: '',
     component: Layout_containerComponent,
-    // canActivate: [authGuard],
 
     children: [
       {
         path: '',
+        canActivate: [authGuard],
         children: [
           { path: 'listbooks', component: HomeComponent },
           { path: 'createBooks', component: CreateBookComponent },

@@ -1,8 +1,31 @@
-<label> Tìm kiếm theo tên </label>
-<input [(ngModel)]="name_search" (ngModelChange)="onNameSearchChange()" />
+<form class="form" [formGroup]="searchs">
+  <div>
+    <label> Tìm kiếm theo tên </label>
+    <input [(ngModel)]="name_search" formControlName="name_search" />
+  </div>
 
-<label> Tìm kiếm theo đầu sách </label>
-<input [(ngModel)]="type_search" (ngModelChange)="onTypeSearchChange()" />
+  <div>
+    <label> Tìm kiếm theo đầu sách </label>
+    <nz-select
+      [(ngModel)]="searchs.value.selectedValue"
+      (nzOpenChange)="onSelectChange($event)"
+      formControlName="selectedValue"
+      nzAllowClear
+      nzPlaceHolder="Choose"
+    >
+      <nz-option
+        *ngFor="let data of typeBooks"
+        [nzLabel]="data.type_Book"
+        [nzValue]="data._id"
+      >
+      </nz-option>
+    </nz-select>
+  </div>
+
+  <button (click)="handelSearch()">Tìm kiếm</button>
+  <button (click)="handelGetAll()">Get All</button>
+</form>
+
 <div class="isloading" *ngIf="isLoading == true">
   <app-loadding></app-loadding>
 </div>
@@ -123,18 +146,26 @@
       </div>
       <div class="form-group">
         <label for="bookType">Type:</label>
-        <input
+        <nz-select [(ngModel)]="typeDetail" nzAllowClear nzPlaceHolder="Choose">
+          <nz-option
+            *ngFor="let data of typeBooks"
+            [nzLabel]="data.type_Book"
+            [nzValue]="data._id"
+          >
+          </nz-option>
+        </nz-select>
+        <!-- <input
           id="bookType"
           type="text"
           class="form-control"
           [(ngModel)]="typeDetail"
-        />
+        /> -->
       </div>
     </div>
   </ng-container>
 </nz-modal>
 
-<table class="table" *ngIf="newArray.length > 0">
+<table class="table" *ngIf="newArray.length > 0 && isSearch == true">
   <thead class="thead-dark">
     <tr>
       <th scope="col">#</th>
@@ -189,7 +220,71 @@
     </tr>
   </tbody>
 </table>
-<div *ngIf="newArray.length <= 0">Không có sản phẩm nào</div>
+<div *ngIf="newArray.length <= 0 && isSearch == true">
+  Không có sản phẩm nào
+</div>
+
+<!-- dữ liệu search -->
+
+<table class="table" *ngIf="newArraySearch.length > 0 && isSearch == false">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Tên sản phẩm</th>
+      <th scope="col">Số lượng ban đầu</th>
+      <th scope="col">Số lượng còn</th>
+      <th scope="col">Thể Loại</th>
+      <th scope="col">Trạng thái</th>
+      <th scope="col">#</th>
+
+      <th scope="col">Sửa</th>
+      <th scope="col">Xóa</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let item of newArraySearch; let i = index"
+      id="book-row-{{ item._id }}"
+    >
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ item.name_book }}</td>
+      <td>{{ item.original_number }}</td>
+      <td>{{ item.number_of_remaining }}</td>
+      <td>{{ item.type_Book }}</td>
+
+      <td
+        *ngIf="item.number_of_remaining > 0"
+        class="book-status book-available"
+      >
+        Còn sách
+      </td>
+      <td
+        *ngIf="item.number_of_remaining <= 0"
+        class="book-status book-out-of-stock"
+      >
+        Hết sách
+      </td>
+      <td *ngIf="item.number_of_remaining > 0">
+        <button (click)="hanldeMuon(item)">Mượn</button>
+      </td>
+      <td *ngIf="item.number_of_remaining <= 0">
+        <button [disabled]="item.number_of_remaining <= 0">Mượn</button>
+      </td>
+      <td>
+        <button nz-button (click)="showModal(item)" class="edit-button">
+          <span>Sửa</span>
+        </button>
+      </td>
+      <td>
+        <button (click)="handleDelete(item._id)">Xóa</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="newArraySearch.length <= 0 && isSearch == false">
+  Không có sản phẩm nào
+</div>
+
 <nz-pagination
   [nzPageIndex]="1"
   [nzTotal]="100"

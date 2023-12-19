@@ -78,9 +78,23 @@
             [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
           ></span>
         </span>
+        <button
+          nz-popover
+          [nzPopoverContent]="contentTemplate"
+          nzPopoverPlacement="bottom"
+          (click)="handlePopoverVisibility($event)"
+        >
+          Xin chào, {{ name }}
+        </button>
       </div>
     </nz-header>
-    <div style="width: 100px">Đăng nhập</div>
+
+    <ng-template #contentTemplate>
+      <div (click)="handleContentClick()">
+        <!-- Your content goes here -->
+        Đăng xuất
+      </div>
+    </ng-template>
 
     <nz-content>
       <div class="inner-content">

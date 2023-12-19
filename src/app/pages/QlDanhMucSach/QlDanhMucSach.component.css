@@ -2,3 +2,25 @@
   position: absolute;
   right: 40px;
 }
+
+label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+/* Style the input */
+input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Ensure padding and border are included in the width */
+}
+
+/* Optional: Add focus styles to the input */
+input:focus {
+  outline: none;
+  border-color: #007bff; /* Change to your desired focus color */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Change to your desired box shadow */
+}

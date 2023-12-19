@@ -85,3 +85,8 @@ nz-content {
   background: #fff;
   height: 100%;
 }
+
+button {
+  background-color: white;
+  border: none;
+}

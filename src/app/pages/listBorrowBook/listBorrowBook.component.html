@@ -1,13 +1,53 @@
-<label> Tìm kiếm theo tên sách </label>
-<input [(ngModel)]="name_search" (ngModelChange)="hanldeSearchNameBook()" />
+<!-- <form>
+  <div>
+    <label> Tìm kiếm theo tên sách </label>
+    <input [(ngModel)]="name_search" />
+  </div>
 
-<label> Tìm kiếm theo đầu sách </label>
-<input [(ngModel)]="type_search" (ngModelChange)="hanldeSearchTypeBook()" />
+  <div>
+    <label> Tìm kiếm theo đầu sách </label>
+    <input [(ngModel)]="type_search" />
+  </div>
 
-<label> Tìm kiếm theo tên người mượn </label>
-<input [(ngModel)]="nameUser_search" (ngModelChange)="hanldeSearchNameUser()" />
+  <div>
+    <label> Tìm kiếm theo tên người mượn </label>
+    <input [(ngModel)]="nameUser_search" />
+  </div>
+</form> -->
 
-<table class="table">
+<form class="form" [formGroup]="searchs">
+  <div>
+    <label> Tìm kiếm theo tên sách </label>
+    <input formControlName="name_search" />
+  </div>
+  <div>
+    <label> Tìm kiếm theo tên người mượn </label>
+    <input formControlName="name_user" />
+  </div>
+
+  <div>
+    <label> Tìm kiếm theo đầu sách </label>
+    <nz-select
+      [(ngModel)]="searchs.value.selectedValue"
+      (nzOpenChange)="onSelectChange($event)"
+      formControlName="selectedValue"
+      nzAllowClear
+      nzPlaceHolder="Choose"
+    >
+      <nz-option
+        *ngFor="let data of typeBooks"
+        [nzLabel]="data.type_Book"
+        [nzValue]="data.type_Book"
+      >
+      </nz-option>
+    </nz-select>
+  </div>
+
+  <button (click)="handelSearch()">Tìm kiếm</button>
+  <button (click)="handelGetAll()">Get All</button>
+</form>
+
+<table class="table" *ngIf="isSearch == true">
   <thead class="thead-dark">
     <tr>
       <th scope="col">#</th>
@@ -24,6 +64,63 @@
   </thead>
   <tbody>
     <tr *ngFor="let item of datas; let i = index" id="book-row-{{ item._id }}">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ item.name_book }}</td>
+      <td>{{ item.type }}</td>
+      <td>{{ item.use_name }}</td>
+      <td>{{ item.borrowed_Day | date : "dd/MM/yyyy" }}</td>
+      <td>{{ item.paymentDate | date : "dd/MM/yyyy" }}</td>
+      <td>{{ item.payDay | date : "dd/MM/yyyy" }}</td>
+      <td
+        class="{{
+          item.status === 'Đã trả'
+            ? 'datra'
+            : item.status === 'Mượn quá hạn'
+            ? 'muonquahan'
+            : 'chuatra'
+        }}"
+        title="{{
+          item.status === 'Đã trả'
+            ? 'Trả đúng hạn khi ngày trả sớm hơn ngày hẹn trả'
+            : item.status === 'Mượn quá hạn'
+            ? 'Trả sai hạn khi ngày trả muộn hơn ngày hẹn trả (phạt)'
+            : 'Chưa trả sách'
+        }}"
+      >
+        {{ item.status }}
+      </td>
+      <td *ngIf="item.status != 'Đã trả'">
+        <button (click)="hanldeMuon(item._id, item.bookId)">Trả sách</button>
+      </td>
+      <td *ngIf="item.status == 'Đã trả'">
+        <button [disabled]="item.status == 'Đã trả'">Trả sách</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- dữ liệu search -->
+
+<table class="table" *ngIf="isSearch == false">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Tên sách</th>
+      <th scope="col">Danh mục</th>
+      <th scope="col">Tên người mượn</th>
+      <th scope="col">Ngày mượn</th>
+      <th scope="col">Ngày hẹn trả</th>
+      <th scope="col">Ngày trả</th>
+      <th scope="col">Trang thái</th>
+
+      <th scope="col">Trả sách</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let item of newArraySearch; let i = index"
+      id="book-row-{{ item._id }}"
+    >
       <th scope="row">{{ i + 1 }}</th>
       <td>{{ item.name_book }}</td>
       <td>{{ item.type }}</td>

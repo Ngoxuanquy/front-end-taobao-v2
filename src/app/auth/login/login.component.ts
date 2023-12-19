@@ -2,7 +2,13 @@ import { Component, OnInit, EventEmitter, Output, inject } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { NavigationExtras, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import {
+  FormControl,
+  ReactiveFormsModule,
+  FormGroup,
+  Validators,
+  FormBuilder,
+} from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
@@ -45,6 +51,20 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.authService.isLoggedIn);
+
+    if (this.authService.isLoggedIn == true) {
+      console.log('abccc');
+      this.router.navigate(['/']);
+
+      return true;
+    } else {
+      // Create a dummy session id
+      // Navigate to the login page with extras
+      this.router.navigate(['auth/login']);
+      console.log('abnvcbc');
+
+      return false;
+    }
   }
 
   getMessage() {
@@ -106,7 +126,7 @@ export class LoginComponent implements OnInit {
 
         if (response.metadata.status == 'Đăng Nhập Thành Công1') {
           this.message = 'Trying to log in ...';
-
+          console.log({ response });
           this.authService.login().subscribe(() => {
             this.message = this.getMessage();
             if (this.authService.isLoggedIn) {
@@ -114,7 +134,11 @@ export class LoginComponent implements OnInit {
                 'token',
                 response.metadata.tokens.accessToken
               );
+
+              this.cookieService.set('name', response.metadata.shop.name);
+
               this.saveTokenToCookie(response.metadata.tokens.accessToken);
+
               this.isLoading = false;
 
               // Usually you would use the redirect URL from the auth service.
@@ -141,7 +165,7 @@ export class LoginComponent implements OnInit {
         }
       });
     } else {
-      alert('vui lòng nhập đủ thông tin');
+      // alert('vui lòng nhập đủ thông tin');
     }
   }
 

@@ -1,17 +1,20 @@
 <div class="container">
-  <!-- <p>{{ message }}</p> -->
   <div class="isloading" *ngIf="isLoading == true">
     <app-loadding></app-loadding>
   </div>
   <form [formGroup]="login_value">
     <h2>Đăng nhập</h2>
-
-    <label for="first-name">Email: </label>
-    <input id="first-name" type="text" formControlName="email" />
+    <label for="email">Email: </label>
+    <input id="email" type="text" formControlName="email" />
+    <span class="error" *ngIf="login_value.get('email').hasError('required')"
+      >Vui lòng nhập email</span
+    >
     <br />
-    <label for="last-name">Mật khẩu: </label>
-    <input id="last-name" type="text" formControlName="password" />
-
+    <label for="password">Mật khẩu: </label>
+    <input id="password" type="password" formControlName="password" />
+    <span class="error" *ngIf="login_value.get('password').hasError('required')"
+      >Vui lòng nhập mật khẩu</span
+    >
     <p>
       <button type="button" (click)="login()">Login</button>
     </p>
