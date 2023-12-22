@@ -38,6 +38,7 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private contexts: ChildrenOutletContexts,
+
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
   isCollapsed = false;
@@ -54,8 +55,6 @@ export class AppComponent implements OnInit {
       const hasToken = localStorage.getItem('token') !== null;
 
       this.authService.setIsLogin(hasToken);
-
-      console.log({ hasToken });
     }
   }
 }

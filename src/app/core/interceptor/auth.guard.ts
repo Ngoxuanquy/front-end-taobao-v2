@@ -21,11 +21,10 @@ export class authGuard implements CanActivate {
     // Use async/await to handle asynchronous operations
 
     const isLoggedIn: boolean = await this.authService.isLoggedIn;
-
     console.log({ isLoggedIn });
     console.log('abcabcbabcbcbcbcbc');
 
-    if (isLoggedIn === true) {
+    if (isLoggedIn == true) {
       return true;
     } else {
       this.router.navigate(['/admin/login']);
