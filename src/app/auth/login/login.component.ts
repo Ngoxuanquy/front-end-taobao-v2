@@ -1,5 +1,4 @@
 import { Component, OnInit, EventEmitter, Output, inject } from '@angular/core';
-import { AuthService } from '../auth.service';
 import { NavigationExtras, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
@@ -16,6 +15,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { LoaddingComponent } from '../../components/loadding/loadding.component';
 import { CookieService } from 'ngx-cookie-service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -139,11 +139,16 @@ export class LoginComponent implements OnInit {
 
               this.saveTokenToCookie(response.metadata.tokens.accessToken);
 
+              localStorage.setItem(
+                'token',
+                JSON.stringify(response.metadata.tokens.accessToken)
+              );
+
               this.isLoading = false;
 
               // Usually you would use the redirect URL from the auth service.
               // However to keep the example simple, we will always redirect to `/admin`.
-              const redirectUrl = '/';
+              const redirectUrl = '/admin';
               console.log(this.authService.isLoggedIn);
               // Set our navigation extras object
               // that passes on our global query params and fragment

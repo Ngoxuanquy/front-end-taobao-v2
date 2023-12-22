@@ -1,0 +1,54 @@
+/* Reset some default styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Apply styles to the form */
+.form {
+  display: flex;
+  flex-direction: column;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style form row */
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* Style form elements */
+.form-row label {
+  margin-right: 10px; /* Adjust the spacing between label and input/select */
+}
+
+.form-row input,
+.form-row app-selectTypeBook,
+.form-row button {
+  flex: 1; /* Distribute available space equally among form elements */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-row button {
+  margin-left: 10px; /* Add spacing between the last input and the button */
+  width: auto; /* Allow button to grow based on content */
+  background-color: #4caf50;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-row button:hover {
+  background-color: #45a049;
+}

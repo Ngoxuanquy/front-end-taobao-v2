@@ -1,0 +1,36 @@
+/* Add these styles to your global styles or component-specific styles */
+nz-select {
+  width: 100%;
+  max-width: 300px; /* Adjust the max-width as needed */
+}
+
+nz-option {
+  display: flex;
+  align-items: center;
+}
+
+nz-option .ant-select-item-option-content {
+  flex: 1;
+}
+
+/* Optional: Style for the selected option */
+nz-option.ant-select-item-option-active,
+nz-option.ant-select-item-option-selected {
+  background-color: #e6f7ff; /* Adjust the background color as needed */
+  color: #1890ff; /* Adjust the text color as needed */
+}
+
+/* Optional: Style for the dropdown menu */
+.nz-select-dropdown {
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nz-select-dropdown-menu-item {
+  padding: 8px 12px;
+  transition: background 0.3s;
+}
+
+.nz-select-dropdown-menu-item:hover {
+  background-color: #e6f7ff; /* Adjust the background color as needed */
+}

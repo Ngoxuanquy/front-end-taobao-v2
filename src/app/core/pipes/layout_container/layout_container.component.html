@@ -1,0 +1,114 @@
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+  crossorigin="anonymous"
+/>
+
+<nz-layout class="app-layout">
+  <nz-sider
+    class="menu-sidebar"
+    nzCollapsible
+    nzWidth="256px"
+    nzBreakpoint="md"
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null"
+  >
+    <div class="sidebar-logo">
+      <a href="/" target="_blank">
+        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo" />
+        <h1>Quản lý mượn sách</h1>
+      </a>
+    </div>
+    <ul
+      nz-menu
+      nzTheme="dark"
+      nzMode="inline"
+      [nzInlineCollapsed]="isCollapsed"
+    >
+      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
+        <ul>
+          <li nz-menu-item>
+            <a
+              [routerLink]="['listbooks']"
+              routerLinkActive="router-link-active"
+              routerLinkActive="active"
+              ariaCurrentWhenActive="page"
+              >Danh sách books</a
+            >
+          </li>
+          <li nz-menu-item>
+            <a
+              [routerLink]="['createBooks']"
+              routerLinkActive="router-link-active"
+            >
+              Tạo sách
+            </a>
+          </li>
+          <li nz-menu-item>
+            <a
+              [routerLink]="['listBorrowBook']"
+              routerLinkActive="router-link-active"
+              >Danh sách người mượn</a
+            >
+          </li>
+          <li nz-menu-item>
+            <a
+              [routerLink]="['qldanhmucsach']"
+              routerLinkActive="router-link-active"
+              >Quản lý danh mục sách
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzOpen nzTitle="Form" nzIcon="form">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a>Basic Form</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+          <span
+            class="trigger"
+            nz-icon
+            [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+          ></span>
+        </span>
+        <button
+          nz-popover
+          [nzPopoverContent]="contentTemplate"
+          nzPopoverPlacement="bottom"
+          (click)="handlePopoverVisibility($event)"
+          class="text-name"
+        >
+          Xin chào, {{ name }}
+        </button>
+      </div>
+    </nz-header>
+
+    <ng-template #contentTemplate>
+      <div (click)="handleContentClick()">
+        <!-- Your content goes here -->
+        Đăng xuất
+      </div>
+    </ng-template>
+
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
+
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+  crossorigin="anonymous"
+></script>

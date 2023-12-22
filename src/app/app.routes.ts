@@ -1,24 +1,23 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './auth/auth.guard';
+import { authGuard } from './core/interceptor/auth.guard'; // Corrected import
+import { LoginComponent } from './auth/login/login.component';
 
 export const routes: Routes = [
   {
     path: '',
-    canActivate: [authGuard],
+    canActivate: [authGuard], // Corrected case
     loadChildren: () =>
-      import('./components/layout_container/layout.routes').then(
+      import('./core/pipes/layout_container/layout.routes').then(
         (m) => m.WELCOME_ROUTES
       ),
   },
-  // {
-  //   path: 'auth/login',
-  //   component: LoginComponent,
-  // },
   {
     path: 'auth',
     loadChildren: () =>
-      import('./components/layout_login/layouLogin.routes').then(
+      import('./core/pipes/layout_login/layouLogin.routes').then(
         (m) => m.WELCOME_ROUTES
       ),
+    // canActivate: [authGuard],
   },
+  { path: '**', component: LoginComponent },
 ];

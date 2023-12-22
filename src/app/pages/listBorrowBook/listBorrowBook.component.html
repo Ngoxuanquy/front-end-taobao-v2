@@ -1,20 +1,6 @@
-<!-- <form>
-  <div>
-    <label> Tìm kiếm theo tên sách </label>
-    <input [(ngModel)]="name_search" />
-  </div>
-
-  <div>
-    <label> Tìm kiếm theo đầu sách </label>
-    <input [(ngModel)]="type_search" />
-  </div>
-
-  <div>
-    <label> Tìm kiếm theo tên người mượn </label>
-    <input [(ngModel)]="nameUser_search" />
-  </div>
-</form> -->
-
+<div class="isloading" *ngIf="isLoading == true">
+  <app-loadding></app-loadding>
+</div>
 <form class="form" [formGroup]="searchs">
   <div>
     <label> Tìm kiếm theo tên sách </label>
@@ -64,7 +50,8 @@
   </thead>
   <tbody>
     <tr *ngFor="let item of datas; let i = index" id="book-row-{{ item._id }}">
-      <th scope="row">{{ i + 1 }}</th>
+      <th scope="row" *ngIf="pages == 1">{{ i + 1 }}</th>
+      <th scope="row" *ngIf="pages != 1">{{ pages * 10 + i + 1 }}</th>
       <td>{{ item.name_book }}</td>
       <td>{{ item.type }}</td>
       <td>{{ item.use_name }}</td>
@@ -89,11 +76,15 @@
       >
         {{ item.status }}
       </td>
-      <td *ngIf="item.status != 'Đã trả'">
+      <td *ngIf="item.status != 'Đã trả' && item.status != 'Mượn quá hạn'">
         <button (click)="hanldeMuon(item._id, item.bookId)">Trả sách</button>
       </td>
-      <td *ngIf="item.status == 'Đã trả'">
-        <button [disabled]="item.status == 'Đã trả'">Trả sách</button>
+      <td *ngIf="item.status == 'Đã trả' || item.status == 'Mượn quá hạn'">
+        <button
+          [disabled]="item.status == 'Đã trả' || item.status == 'Mượn quá hạn'"
+        >
+          Trả sách
+        </button>
       </td>
     </tr>
   </tbody>
@@ -140,3 +131,11 @@
     </tr>
   </tbody>
 </table>
+
+<div style="margin-bottom: 30px">
+  <nz-pagination
+    [nzPageIndex]="1"
+    [nzTotal]="100"
+    (nzPageIndexChange)="onPageChange($event)"
+  ></nz-pagination>
+</div>

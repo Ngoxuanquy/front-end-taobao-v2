@@ -9,6 +9,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { FormsModule } from '@angular/forms';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { LoaddingComponent } from '../../components/loadding/loadding.component';
 
 @Component({
   selector: 'app-listBorrowBook',
@@ -21,6 +23,8 @@ import { FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
     NzSelectModule,
+    NzPaginationModule,
+    LoaddingComponent,
   ],
 })
 export class ListBorrowBookComponent implements OnInit {
@@ -42,6 +46,7 @@ export class ListBorrowBookComponent implements OnInit {
   newArraySearch: any[] = [];
   isSearch: boolean = true;
 
+  isLoading: boolean = false;
   // xử lý lấy value để sreach/s
   searchs: any = new FormGroup({
     name_search: new FormControl(''),
@@ -61,32 +66,43 @@ export class ListBorrowBookComponent implements OnInit {
 
   //tìm kiếm
   handelSearch(): void {
-    this.isSearch = false;
+    console.log(this.searchs.value.selectedValue == '');
+    if (
+      this.searchs.value.name_search != '' &&
+      this.searchs.value.name_user != '' &&
+      this.searchs.value.selectedValue != ''
+    ) {
+      this.isSearch = false;
 
-    // Xóa dấu của tên sản phẩm
-    const searchWithoutAccents = this.removeAccents(
-      this.searchs.value.name_search.toLowerCase()
-    );
+      // Xóa dấu của tên sản phẩm
+      const searchWithoutAccents = this.removeAccents(
+        this.searchs.value.name_search.toLowerCase()
+      );
 
-    // Xóa dấu của tên người mượns
-    const searchName = this.removeAccents(
-      this.searchs.value.name_user.toLowerCase()
-    );
+      // Xóa dấu của tên người mượns
+      const searchName = this.removeAccents(
+        this.searchs.value.name_user.toLowerCase()
+      );
 
-    console.log({ searchWithoutAccents });
+      console.log({ searchWithoutAccents });
 
-    // xử lý tìm kiếm gần đúng và đã xóa dấu
-    const results = this.datas.filter(
-      (book) =>
-        this.removeAccents(book.name_book.toLowerCase()).includes(
-          searchWithoutAccents
-        ) &&
-        book.type === this.searchs.value.selectedValue &&
-        this.removeAccents(book.use_name.toLowerCase()).includes(searchName)
-    );
+      // xử lý tìm kiếm gần đúng và đã xóa dấu
+      const results = this.datas.filter(
+        (book) =>
+          this.removeAccents(book.name_book.toLowerCase()).includes(
+            searchWithoutAccents
+          ) &&
+          book.type === this.searchs.value.selectedValue &&
+          this.removeAccents(book.use_name.toLowerCase()).includes(searchName)
+      );
 
-    // trả về mảng mới
-    this.newArraySearch = [...results];
+      // trả về mảng mới
+      this.newArraySearch = [...results];
+    } else {
+      this.message.create('warning', 'Vui lòng nhập đủ thông tin!!!', {
+        nzDuration: 3000,
+      });
+    }
 
     console.log(this.newArraySearch);
   }
@@ -96,78 +112,31 @@ export class ListBorrowBookComponent implements OnInit {
   }
   //lấy type để select
   getDataTypeBook(page: Number): Observable<any> {
-    const accessToken = this.cookieService.get('token');
-
-    console.log(accessToken);
-    // Thêm header vào yêu cầu
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'x-api-key':
-        'de940ac5e7f01350b62ade467f356e3bfb1461304e227ca7084a77ce7859233e83643644860dbb64edbed99f936d79f1a8d82cf6513aaa90fbfd27b61195ab7a', // Thay thế bằng token của bạn
-      'x-client-id': '657d3e90d1ac32569255dd26',
-      authorization: `${accessToken}`,
-    });
-
-    return this.http
-      .get<any>(`${this.apiUrl}/typeBook/getAll/${page}`, {
-        headers: headers,
-      })
-      .pipe(
-        tap((data) => {
-          return data;
-        }),
-        catchError(this.handleError('getData', []))
-      );
+    return this.http.get<any>(`${this.apiUrl}/typeBook/getAll/${page}`).pipe(
+      tap((data) => {
+        return data;
+      }),
+      catchError(this.handleError('getData', []))
+    );
   }
 
   //lấy dữ liệu bảng mượn sách
   getData(page: Number): Observable<any> {
-    const accessToken = this.cookieService.get('token');
-
-    console.log(accessToken);
-    // Thêm header vào yêu cầu
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'x-api-key':
-        'de940ac5e7f01350b62ade467f356e3bfb1461304e227ca7084a77ce7859233e83643644860dbb64edbed99f936d79f1a8d82cf6513aaa90fbfd27b61195ab7a', // Thay thế bằng token của bạn
-      'x-client-id': '657d3e90d1ac32569255dd26',
-      authorization: `${accessToken}`,
-    });
-
-    return this.http
-      .get<any>(`${this.apiUrl}/borrowBook/getAll/${page}`, {
-        headers: headers,
-      })
-      .pipe(
-        tap((data) => {
-          return data;
-        }),
-        catchError(this.handleError('getData', []))
-      );
+    return this.http.get<any>(`${this.apiUrl}/borrowBook/getAll/${page}`).pipe(
+      tap((data) => {
+        return data;
+      }),
+      catchError(this.handleError('getData', []))
+    );
   }
 
   //xứ lý trả sách và tự động tăng laj số lượng lên 1
   hanldeMuon(id: any, bookId: any): void {
-    const accessToken = this.cookieService.get('token');
-
-    // Add headers to the request
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'x-api-key':
-        'de940ac5e7f01350b62ade467f356e3bfb1461304e227ca7084a77ce7859233e83643644860dbb64edbed99f936d79f1a8d82cf6513aaa90fbfd27b61195ab7a', // Replace with your token
-      'x-client-id': '657d3e90d1ac32569255dd26',
-      authorization: `${accessToken}`,
-    });
-
     // Use HTTP DELETE request to delete the book
     this.http
-      .post<any>(
-        `${this.apiUrl}/borrowBook/updateTraSach`,
-        {
-          id,
-        },
-        { headers: headers }
-      )
+      .post<any>(`${this.apiUrl}/borrowBook/updateTraSach`, {
+        id,
+      })
       .subscribe(
         (response) => {
           this.getData(1).subscribe((data: any) => {
@@ -190,28 +159,11 @@ export class ListBorrowBookComponent implements OnInit {
   //xử lý trừ số lượng khi trả sách số lượng cộng lên
 
   reduceTheNumberOf(id: any): void {
-    const accessToken = this.cookieService.get('token');
-
-    console.log(id);
-
-    // Add headers to the request
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'x-api-key':
-        'de940ac5e7f01350b62ade467f356e3bfb1461304e227ca7084a77ce7859233e83643644860dbb64edbed99f936d79f1a8d82cf6513aaa90fbfd27b61195ab7a', // Replace with your token
-      'x-client-id': '657d3e90d1ac32569255dd26',
-      authorization: `${accessToken}`,
-    });
-
     this.http
-      .post<any>(
-        `${this.apiUrl}/book/updateBookQuantity`,
-        {
-          id,
-          quantity: -1,
-        },
-        { headers: headers }
-      )
+      .post<any>(`${this.apiUrl}/book/updateBookQuantity`, {
+        id,
+        quantity: -1,
+      })
       .subscribe(
         (response) => {
           this.getData(1).subscribe((data: any) => {
@@ -224,123 +176,23 @@ export class ListBorrowBookComponent implements OnInit {
       );
   }
 
-  //xử lý tìm kiếm theo tên
-  // hanldeSearchNameBook(): any {
-  //   console.log(this.name_search == '');
-  //   if (this.name_search !== '') {
-  //     const accessToken = this.cookieService.get('token');
-  //     // Add headers to the request
-  //     const headers = new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //       'x-api-key':
-  //         'de940ac5e7f01350b62ade467f356e3bfb1461304e227ca7084a77ce7859233e83643644860dbb64edbed99f936d79f1a8d82cf6513aaa90fbfd27b61195ab7a', // Replace with your token
-  //       'x-client-id': '657d3e90d1ac32569255dd26',
-  //       authorization: `${accessToken}`,
-  //     });
-
-  //     this.http
-  //       .get<any>(
-  //         `${this.apiUrl}/borrowBook/searchNameBook/${this.name_search}`,
-  //         {
-  //           headers: headers,
-  //         }
-  //       )
-  //       .subscribe(
-  //         (response) => {
-  //           this.datas = response.metadata;
-  //         },
-  //         (error) => {
-  //           console.error('Error deleting book', error);
-  //         }
-  //       );
-  //   } else {
-  //     this.getData(1).subscribe((data: any) => {
-  //       this.datas = data.metadata;
-  //     });
-  //   }
-  // }
-
-  //xử lý tìm kiếm theo tên người mượn
-  // hanldeSearchNameUser(): any {
-  //   if (this.nameUser_search !== '') {
-  //     const accessToken = this.cookieService.get('token');
-  //     // Add headers to the request
-  //     const headers = new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //       'x-api-key':
-  //         'de940ac5e7f01350b62ade467f356e3bfb1461304e227ca7084a77ce7859233e83643644860dbb64edbed99f936d79f1a8d82cf6513aaa90fbfd27b61195ab7a', // Replace with your token
-  //       'x-client-id': '657d3e90d1ac32569255dd26',
-  //       authorization: `${accessToken}`,
-  //     });
-
-  //     this.http
-  //       .get<any>(
-  //         `${this.apiUrl}/borrowBook/searchNameUser/${this.nameUser_search}`,
-  //         {
-  //           headers: headers,
-  //         }
-  //       )
-  //       .subscribe(
-  //         (response) => {
-  //           this.datas = response.metadata;
-  //         },
-  //         (error) => {
-  //           // Handle error if needed
-  //           console.error('Error deleting book', error);
-  //         }
-  //       );
-  //   } else {
-  //     this.getData(1).subscribe((data: any) => {
-  //       this.datas = data.metadata;
-  //     });
-  //   }
-  // }
-
-  //xử lý tìm kiếm theo kiểu sách
-  // hanldeSearchTypeBook(): any {
-  //   console.log('abcbcb');
-  //   if (this.type_search !== '') {
-  //     const accessToken = this.cookieService.get('token');
-  //     // Add headers to the request
-  //     const headers = new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //       'x-api-key':
-  //         'de940ac5e7f01350b62ade467f356e3bfb1461304e227ca7084a77ce7859233e83643644860dbb64edbed99f936d79f1a8d82cf6513aaa90fbfd27b61195ab7a', // Replace with your token
-  //       'x-client-id': '657d3e90d1ac32569255dd26',
-  //       authorization: `${accessToken}`,
-  //     });
-
-  //     this.http
-  //       .get<any>(
-  //         `${this.apiUrl}/borrowBook/searchTypeBook/${this.type_search}`,
-  //         {
-  //           headers: headers,
-  //         }
-  //       )
-  //       .subscribe(
-  //         (response) => {
-  //           this.datas = response.metadata;
-  //         },
-  //         (error) => {
-  //           console.error('Error deleting book', error);
-  //         }
-  //       );
-  //   } else {
-  //     this.getData(1).subscribe((data: any) => {
-  //       this.datas = data.metadata;
-  //     });
-  //   }
-  // }
+  pages: any = 1;
+  onPageChange(page: number): void {
+    this.isLoading = true;
+    this.pages = Number(page);
+    this.getData(page).subscribe((data: any) => {
+      this.datas = data.metadata;
+      this.isLoading = false;
+    });
+  }
 
   ngOnInit() {
     this.getData(1).subscribe((data: any) => {
       this.datas = data.metadata;
-      console.log(data.metadata);
     });
 
     this.getDataTypeBook(1).subscribe((data: any) => {
       this.typeBooks = data.metadata;
-      console.log({ data });
     });
   }
 

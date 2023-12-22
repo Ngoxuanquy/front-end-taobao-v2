@@ -1,0 +1,12 @@
+<nz-select
+  [(ngModel)]="typeDetail"
+  nzAllowClear
+  nzPlaceHolder="Choose"
+  (ngModelChange)="onTypeDetailChange()"
+>
+  <nz-option
+    *ngFor="let data of typeBooks"
+    [nzLabel]="data.type_Book"
+    [nzValue]="data._id"
+  ></nz-option>
+</nz-select>
