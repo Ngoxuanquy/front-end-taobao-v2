@@ -7,9 +7,8 @@ import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { NzCalendarModule } from 'ng-zorro-antd/calendar';
 import { DatePipe } from '@angular/common';
-import { UpdateBookService } from '../../services/update_book.server';
-import { BorrowBooksService } from '../../services/borrowBooks.server';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { BorrowBooksService } from '../../services/borrowBooks.service';
 
 @Component({
   selector: 'app-muonSach',
@@ -71,7 +70,7 @@ export class MuonSachComponent implements OnInit {
     ) {
       this.borrowBooksService.borrowBooks(this.valueUserBorrow).subscribe(
         (success) => {
-          this.borrowBooksService.reduceTheNumberOf(this.borrowBooks._id);
+          this.borrowBooksService.reduceTheNumberOf(this.borrowBooks._id, 1);
           this.isVisibleMuon = false;
 
           if (success.metadata.status == 'error') {
@@ -115,7 +114,6 @@ export class MuonSachComponent implements OnInit {
 
   // Lấy ngày thay đổi khi mượn sách (ngày hẹn trả)
   onValueChange(value: Date): void {
-    console.log(`Current value: ${value}`);
     this.dateTime = value;
     this.isVisibleCalendar = false;
 

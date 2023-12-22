@@ -2,7 +2,7 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { SelectTypeBookComponent } from '../../../../components/selectTypeBook/selectTypeBook.component';
 import { FormsModule } from '@angular/forms';
 import { FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
-import { SearchBookService } from '../../services/search_book.server';
+import { BooksService } from '../../services/books.service';
 
 @Component({
   selector: 'app-search_book',
@@ -17,7 +17,7 @@ import { SearchBookService } from '../../services/search_book.server';
   ],
 })
 export class Search_bookComponent implements OnInit {
-  constructor(private searchBookService: SearchBookService) {}
+  constructor(private booksService: BooksService) {}
   @Output() searchChange = new EventEmitter<any>();
   //laay du lieu cuar select
   selectedTypeDetail: any;
@@ -32,7 +32,7 @@ export class Search_bookComponent implements OnInit {
     try {
       console.log(this.name_search);
 
-      const data = await this.searchBookService.search(
+      const data = await this.booksService.search(
         this.name_search,
         this.selectedTypeDetail
       );

@@ -11,6 +11,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { LoaddingComponent } from '../../components/loadding/loadding.component';
+import { BorrowBooksService } from '../../Features/books/services/borrowBooks.service';
 
 @Component({
   selector: 'app-listBorrowBook',
@@ -31,10 +32,10 @@ export class ListBorrowBookComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private cookieService: CookieService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private borrowBooksService: BorrowBooksService
   ) {}
 
-  private apiUrl = 'http://localhost:3056/v1/api';
   datas: any[] = [];
 
   //
@@ -59,148 +60,46 @@ export class ListBorrowBookComponent implements OnInit {
     console.log('Selected value:', this.selectedValue);
   }
 
-  //hàm xóa dấu
-  removeAccents(str: any): any {
-    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  }
-
   //tìm kiếm
   handelSearch(): void {
-    console.log(this.searchs.value.selectedValue == '');
-    if (
-      this.searchs.value.name_search != '' &&
-      this.searchs.value.name_user != '' &&
-      this.searchs.value.selectedValue != ''
-    ) {
-      this.isSearch = false;
+    this.isSearch = false;
 
-      // Xóa dấu của tên sản phẩm
-      const searchWithoutAccents = this.removeAccents(
-        this.searchs.value.name_search.toLowerCase()
-      );
-
-      // Xóa dấu của tên người mượns
-      const searchName = this.removeAccents(
-        this.searchs.value.name_user.toLowerCase()
-      );
-
-      console.log({ searchWithoutAccents });
-
-      // xử lý tìm kiếm gần đúng và đã xóa dấu
-      const results = this.datas.filter(
-        (book) =>
-          this.removeAccents(book.name_book.toLowerCase()).includes(
-            searchWithoutAccents
-          ) &&
-          book.type === this.searchs.value.selectedValue &&
-          this.removeAccents(book.use_name.toLowerCase()).includes(searchName)
-      );
-
-      // trả về mảng mới
-      this.newArraySearch = [...results];
-    } else {
-      this.message.create('warning', 'Vui lòng nhập đủ thông tin!!!', {
-        nzDuration: 3000,
-      });
-    }
-
-    console.log(this.newArraySearch);
+    this.borrowBooksService.search(this.searchs).subscribe((data) => {
+      this.newArraySearch = data;
+    });
   }
 
   handelGetAll(): void {
     this.isSearch = true;
   }
-  //lấy type để select
-  getDataTypeBook(page: Number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/typeBook/getAll/${page}`).pipe(
-      tap((data) => {
-        return data;
-      }),
-      catchError(this.handleError('getData', []))
-    );
-  }
-
-  //lấy dữ liệu bảng mượn sách
-  getData(page: Number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/borrowBook/getAll/${page}`).pipe(
-      tap((data) => {
-        return data;
-      }),
-      catchError(this.handleError('getData', []))
-    );
-  }
 
   //xứ lý trả sách và tự động tăng laj số lượng lên 1
-  hanldeMuon(id: any, bookId: any): void {
+  hanldeTra(id: any, bookId: any): void {
     // Use HTTP DELETE request to delete the book
-    this.http
-      .post<any>(`${this.apiUrl}/borrowBook/updateTraSach`, {
-        id,
-      })
-      .subscribe(
-        (response) => {
-          this.getData(1).subscribe((data: any) => {
-            this.datas = data.metadata;
-          });
-
-          this.message.create('success', 'Cập nhật thành công!!!', {
-            nzDuration: 3000,
-          });
-
-          //tăng sô lượng khi trả sachs
-          this.reduceTheNumberOf(bookId);
-        },
-        (error) => {
-          console.error('Error deleting book', error);
-        }
-      );
-  }
-
-  //xử lý trừ số lượng khi trả sách số lượng cộng lên
-
-  reduceTheNumberOf(id: any): void {
-    this.http
-      .post<any>(`${this.apiUrl}/book/updateBookQuantity`, {
-        id,
-        quantity: -1,
-      })
-      .subscribe(
-        (response) => {
-          this.getData(1).subscribe((data: any) => {
-            this.datas = data.metadata;
-          });
-        },
-        (error) => {
-          console.error('Error deleting book', error);
-        }
-      );
+    this.borrowBooksService.giveBookBack(id, bookId).subscribe((data) => {
+      this.borrowBooksService.getData(1).subscribe((data: any) => {
+        this.datas = data.metadata;
+      });
+    });
   }
 
   pages: any = 1;
   onPageChange(page: number): void {
     this.isLoading = true;
     this.pages = Number(page);
-    this.getData(page).subscribe((data: any) => {
+    this.borrowBooksService.getData(page).subscribe((data: any) => {
       this.datas = data.metadata;
       this.isLoading = false;
     });
   }
 
   ngOnInit() {
-    this.getData(1).subscribe((data: any) => {
+    this.borrowBooksService.getData(1).subscribe((data: any) => {
       this.datas = data.metadata;
     });
 
-    this.getDataTypeBook(1).subscribe((data: any) => {
+    this.borrowBooksService.getDataTypeBook(1).subscribe((data: any) => {
       this.typeBooks = data.metadata;
     });
-  }
-
-  // Xử lý lỗi
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(`${operation} failed: ${error.message}`);
-      return of(result as T);
-    };
   }
 }

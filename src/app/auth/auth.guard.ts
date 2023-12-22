@@ -6,7 +6,7 @@ import {
   Router,
   UrlTree,
 } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../core/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,9 +20,7 @@ export class authGuard implements CanActivate {
   ): Promise<boolean | UrlTree> {
     // Use async/await to handle asynchronous operations
 
-    const isLoggedIn: boolean = await this.authService.isLoggedIn;
-    console.log({ isLoggedIn });
-    console.log('abcabcbabcbcbcbcbc');
+    const isLoggedIn: boolean = this.authService.isLoggedIn;
 
     if (isLoggedIn == true) {
       return true;

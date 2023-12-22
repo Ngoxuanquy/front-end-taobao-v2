@@ -3,7 +3,7 @@ import { SelectTypeBookComponent } from '../../../../components/selectTypeBook/s
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { UpdateBookService } from '../../services/update_book.server';
+import { BooksService } from '../../services/books.service';
 
 @Component({
   selector: 'app-update_book',
@@ -19,7 +19,7 @@ import { UpdateBookService } from '../../services/update_book.server';
   ],
 })
 export class Update_bookComponent implements OnInit {
-  constructor(private updateBookService: UpdateBookService) {}
+  constructor(private booksService: BooksService) {}
   @Input() selectedItem: any;
   @Input() isUpdateForm: any;
   @Output() typeDetailChange = new EventEmitter<any>(); // EventEmitter to emit events to the parent component
@@ -55,7 +55,7 @@ export class Update_bookComponent implements OnInit {
     console.log(this.selectedItem);
     console.log(this.selectedItem._id);
 
-    this.updateBookService
+    this.booksService
       .update(
         this.selectedItem._id,
         this.selectedTypeDetail,

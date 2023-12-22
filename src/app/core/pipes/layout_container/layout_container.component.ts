@@ -5,7 +5,6 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { RouterModule, Routes } from '@angular/router';
-import { QlDanhMucSachComponent } from '../../../pages/QlDanhMucSach/QlDanhMucSach.component';
 import { CookieService } from 'ngx-cookie-service';
 import { NavigationExtras, Router } from '@angular/router';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
@@ -17,6 +16,7 @@ import {
   query,
   stagger,
 } from '@angular/animations';
+import { TypeBooksComponent } from '../../../pages/typeBooks/typeBooks.component';
 @Component({
   selector: 'app-layout_container',
   standalone: true,
@@ -27,7 +27,7 @@ import {
     NzLayoutModule,
     NzMenuModule,
     RouterModule,
-    QlDanhMucSachComponent,
+    TypeBooksComponent,
     NzPopoverModule,
   ],
   templateUrl: './layout_container.component.html',

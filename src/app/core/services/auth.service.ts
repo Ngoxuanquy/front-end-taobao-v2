@@ -18,8 +18,6 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       // Initialize the 'isLoggedIn' property based on the presence of a token in localStorage
       this.isLoggedIn = localStorage.getItem('token') !== null;
-
-      console.log({ islogin: this.isLoggedIn });
     }
   }
 
@@ -30,24 +28,18 @@ export class AuthService {
     return of(true).pipe(
       delay(1000),
       tap(() => {
-        // Set isLoggedIn to true upon successful login
         this.isLoggedIn = true;
-        // You may want to store the token in localStorage here
-        localStorage.setItem('token', 'your_token_value');
       })
     );
   }
 
   logout(): void {
-    // Set isLoggedIn to false upon logout
     this.isLoggedIn = false;
-    // Delete the token from cookies or localStorage upon logout
     this.cookieService.delete('token');
     localStorage.removeItem('token');
   }
 
   setIsLogin(state: boolean) {
-    // Set the isLoggedIn property based on the provided state
     this.isLoggedIn = state;
   }
 }

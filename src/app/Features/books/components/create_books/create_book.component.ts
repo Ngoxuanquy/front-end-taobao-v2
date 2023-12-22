@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzSelectModule } from 'ng-zorro-antd/select';
-import { CreateBookService } from '../../services/create_book.server';
+import { BooksService } from '../../services/books.service';
 
 @Component({
   selector: 'app-create_book',
@@ -33,10 +33,9 @@ export class CreateBookComponent implements OnInit {
     private cookieService: CookieService,
     private message: NzMessageService,
     private router: Router,
-    private createBookService: CreateBookService
+    private booksService: BooksService
   ) {}
 
-  private apiUrl = 'http://localhost:3056/v1/api';
   datas: any[] = [];
   selectedValue: any;
 
@@ -53,23 +52,23 @@ export class CreateBookComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.getData(1).subscribe((data: any) => {
-      this.datas = data.metadata;
-    });
-  }
+    this.booksService
+      .getTypeData(1)
+      .then((data) => {
+        // Handle successful response data here
+        this.datas = data.metadata;
 
-  //lấy kiểu để select (kiểu sách)
-  getData(page: Number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/typeBook/getAll/${page}`).pipe(
-      tap((data) => {
-        return data;
+        console.log('Data:', data);
       })
-    );
+      .catch((error) => {
+        // Handle errors here
+        console.error('Error:', error);
+      });
   }
 
   // xử lý nút Gửi request dùng subscribe để chạy hàm postBook
   CreateBook(): any {
-    this.createBookService.create(this.create_value.value).subscribe(
+    this.booksService.create(this.create_value.value).subscribe(
       (success) => {
         // Handle success if needed
         console.log('Book created successfully');

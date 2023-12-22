@@ -17,7 +17,6 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { forkJoin } from 'rxjs';
 import { FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { LoaddingComponent } from '../../../../components/loadding/loadding.component';
-import { DeleteBookService } from '../../services/delete_book.server';
 import { SelectTypeBookComponent } from '../../../../components/selectTypeBook/selectTypeBook.component';
 import { Update_bookComponent } from '../update_book/update_book.component';
 import { MuonSachComponent } from '../muonSach/muonSach.component';
@@ -31,11 +30,21 @@ import {
   stagger,
   state,
 } from '@angular/animations';
+import { BooksService } from '../../services/books.service';
 @Component({
   selector: 'app-list-book',
   templateUrl: './list_books.component.html',
   styleUrls: ['./list_books.component.css'],
   standalone: true,
+  animations: [
+    trigger('shrinkOut', [
+      state('in', style({ height: '*' })),
+      transition('* => void', [
+        style({ height: '*' }),
+        animate(250, style({ height: 0 })),
+      ]),
+    ]),
+  ],
   imports: [
     List_booksComponent,
     CommonModule,
@@ -50,17 +59,8 @@ import {
     ReactiveFormsModule,
     SelectTypeBookComponent,
     Update_bookComponent,
-    MuonSachComponent,
     Search_bookComponent,
-  ],
-  animations: [
-    trigger('shrinkOut', [
-      state('in', style({ height: '*' })),
-      transition('* => void', [
-        style({ height: '*' }),
-        animate(250, style({ height: 0 })),
-      ]),
-    ]),
+    MuonSachComponent,
   ],
 })
 export class List_booksComponent implements OnInit {
@@ -69,7 +69,7 @@ export class List_booksComponent implements OnInit {
     private cookieService: CookieService,
     private message: NzMessageService,
     private renderer: Renderer2,
-    private deleteBookService: DeleteBookService
+    private booksService: BooksService
   ) {}
   private apiUrl = 'http://localhost:3056/v1/api';
 
@@ -77,9 +77,6 @@ export class List_booksComponent implements OnInit {
   datas: any[] = [];
   //api kiểu sách
   dataTypes: any[] = [];
-
-  name_search: any;
-  type_search: any;
 
   //
   isUpdateForm: boolean = false;
@@ -91,26 +88,14 @@ export class List_booksComponent implements OnInit {
   isVisibleCalendar = false;
 
   //Dữ liệu mượn
-  detailItemMuon: any;
-  nameDetailMuon: any;
-  idDetailMuon: any;
-  typeDetailMuon: any;
-  SoluongDetailMuon: any;
   isLoadingMuon: boolean = false;
 
-  dateTime: any;
   newArraySearch: any[] = [];
-
-  //thông tin người mượn
-  use_name: String = '';
-  phone_number: any;
-  selectedValue: any;
 
   isSearch: boolean = true;
 
   newArray: any[] = [];
   //khởi tạo thuộc tính cho mảng mới
-  typeBooks: any;
 
   //Lấy full newArray
   handelGetAll(): void {
@@ -127,55 +112,30 @@ export class List_booksComponent implements OnInit {
   // truyeenf duw lieuj dder bat tat madel
   setIsUpdateForm(selectedValue: any) {
     this.isUpdateForm = selectedValue;
-  }
 
-  isBorrowBooksForm: any = false;
-  // truyeenf duw lieuj dder bat tat madel
-  loadData() {
-    return Promise.all([
-      this.getData(1).toPromise(),
-      this.getTypeData(1).toPromise(),
-    ])
-      .then(([data, typeData]) => {
-        this.datas = data.metadata;
-        this.dataTypes = typeData.metadata;
-
-        this.newArray = this.datas.map((item1) => {
-          const correspondingItem2 = this.dataTypes.find(
-            (item2) => item1.type === item2._id
-          );
-
-          if (correspondingItem2) {
-            return {
-              ...item1,
-              type_Book: correspondingItem2.type_Book,
-            };
-          }
-
-          return item1;
-        });
-
+    const dataPromise = this.booksService.getDataValueType(1);
+    dataPromise
+      .then((data) => {
+        // Use the data here
+        this.newArray = data;
         this.isLoading = false;
-        return this.newArray;
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
-        throw error; // rethrow the error to propagate it to the caller
+        // Handle errors here
       });
-  }
 
-  setIsBorrowBooksForm(selectedValue: any) {
-    this.isBorrowBooksForm = selectedValue;
-
-    return this.loadData()
+    return this.booksService
+      .loadData()
       .then((dataTest) => {
-        this.getDataValueType(1);
         this.newArray = dataTest;
       })
       .catch((error) => {
         console.error('Error setting isBorrowBooksForm:', error);
       });
   }
+
+  isBorrowBooksForm: any = false;
+  // truyeenf duw lieuj dder bat tat madel
 
   setDataSearch(data: any) {
     this.newArraySearch = data;
@@ -219,74 +179,33 @@ export class List_booksComponent implements OnInit {
   }
 
   //xử lý trừ số lượng khi mượn
+  setIsBorrowBooksForm(selectedValue: any) {
+    this.isBorrowBooksForm = selectedValue;
 
-  //xử lý data trả về dữ liệu type nếu type = typeId\
-  getDataValueType(page: any): void {
-    forkJoin([
-      this.getData(page !== '' ? page : 1),
-      this.getTypeData(1),
-    ]).subscribe(
-      ([data, typeData]) => {
-        this.datas = data.metadata;
-        console.log(data.metadata);
-        this.dataTypes = typeData.metadata;
-
-        // Process data here
-        this.newArray = this.datas.map((item1) => {
-          const correspondingItem2 = this.dataTypes.find(
-            (item2) => item1.type === item2._id
-          );
-
-          if (correspondingItem2) {
-            return {
-              ...item1,
-              type_Book: correspondingItem2.type_Book,
-            };
-          }
-
-          return item1;
-        });
-
+    const dataPromise = this.booksService.getDataValueType(1);
+    dataPromise
+      .then((data) => {
+        // Use the data here
+        this.newArray = data;
         this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching data:', error);
-        this.isLoading = false;
-      }
-    );
-  }
-
-  //lấy type để select
-  getDataTypeBook(page: Number): Observable<any> {
-    return this.http
-      .get<any>(`${this.apiUrl}/typeBook/getAll/${page}`, {
-        // headers: headers,
       })
-      .pipe(
-        tap((data) => {
-          return data;
-        }),
-        catchError(this.handleError('getData', []))
-      );
-  }
+      .catch((error) => {
+        // Handle errors here
+      });
 
-  //Lấy ra danh sách cách type
-  getTypeData(page: Number): Observable<any> {
-    return this.http
-      .get<any>(`${this.apiUrl}/typeBook/getAll/${page}`, {
-        // headers: headers,
+    return this.booksService
+      .loadData()
+      .then((dataTest) => {
+        this.newArray = dataTest;
       })
-      .pipe(
-        tap((data) => {
-          return data;
-        }),
-        catchError(this.handleError('getData', []))
-      );
+      .catch((error) => {
+        console.error('Error setting isBorrowBooksForm:', error);
+      });
   }
 
   //Xóa sách bằng id
   handleDelete(id: any) {
-    this.deleteBookService.deleteBook(id).subscribe(
+    this.booksService.deleteBook(id).subscribe(
       (success) => {
         // Handle success if needed
         const elementToRemove = document.getElementById(`book-row-${id}`);
@@ -305,37 +224,36 @@ export class List_booksComponent implements OnInit {
     );
   }
 
-  //lấy dữ liệu sách api
-  getData(page: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/book/getAll/${page}`).pipe(
-      tap((data) => {
-        console.log({ data });
-        return data;
-      }),
-      catchError(this.handleError('getData', []))
-    );
-  }
-
-  // Xử lý lỗi
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(`${operation} failed: ${error.message}`);
-      return of(result as T);
-    };
-  }
-
   ngOnInit() {
     this.isLoading = true;
-    this.getDataTypeBook(1).subscribe((data: any) => {
-      this.typeBooks = data.metadata;
-    });
+    // this.booksService.getTypeData(1).subscribe((data: any) => {
+    //   this.typeBooks = data.metadata;
+    // });
 
-    this.getDataValueType(1);
+    const dataPromise = this.booksService.getDataValueType(1);
+    dataPromise
+      .then((data) => {
+        // Use the data here
+        this.newArray = data;
+        this.isLoading = false;
+      })
+      .catch((error) => {
+        // Handle errors here
+      });
   }
 
   //Phân trang theo page
   onPageChange(page: number): void {
     this.isLoading = true;
-    this.getDataValueType(page);
+    const dataPromise = this.booksService.getDataValueType(page);
+    dataPromise
+      .then((data) => {
+        // Use the data here
+        this.newArray = data;
+        this.isLoading = false;
+      })
+      .catch((error) => {
+        // Handle errors here
+      });
   }
 }

@@ -17,10 +17,30 @@ import {
   HttpClientModule,
   HTTP_INTERCEPTORS,
   HttpClient,
+  provideHttpClient,
 } from '@angular/common/http';
 import { HeaderInterceptor } from './core/pipes/header-Http-Token/header-Http-Token.component';
-import { InitializeApp } from './core/services/app-config.service';
+import { Observable, firstValueFrom, tap } from 'rxjs';
+import { InitializeAppService } from './core/services/app-config.service';
 registerLocaleData(vi);
+
+// export function initializeApp(http: HttpClient) {
+//   return (): Promise<any> =>
+//     firstValueFrom(
+//       http.get('./assets/config.json').pipe(
+//         tap((ApiUrl) => {
+//           console.log({ ApiUrl });
+//         })
+//       )
+//     );
+
+// }
+
+export function initializeApp(initializeAppService: InitializeAppService) {
+  return (): Observable<any> => {
+    return initializeAppService.initializeApp();
+  };
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -36,11 +56,13 @@ export const appConfig: ApplicationConfig = {
       useClass: HeaderInterceptor,
       multi: true,
     },
+    provideHttpClient(),
     {
       provide: APP_INITIALIZER,
-      useFactory: () => InitializeApp,
+      useFactory: initializeApp,
       multi: true,
-      deps: [HttpClient],
+      // deps: [HttpClient],
+      deps: [InitializeAppService],
     },
   ],
 };

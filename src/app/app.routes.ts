@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/interceptor/auth.guard'; // Corrected import
+import { authGuard } from './auth/auth.guard'; // Corrected import
 import { LoginComponent } from './auth/login/login.component';
 
 export const routes: Routes = [
