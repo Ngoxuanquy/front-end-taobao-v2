@@ -8,7 +8,7 @@ import { isPlatformBrowser } from '@angular/common';
   providedIn: 'root',
 })
 export class AuthService {
-  public isLoggedIn: boolean = false;
+  isLoggedIn = false;
 
   constructor(
     private cookieService: CookieService,
@@ -20,8 +20,6 @@ export class AuthService {
       // this.isLoggedIn = localStorage.getItem('token') !== null;
     }
   }
-
-  // Getter for isLoggedIn property
 
   login(): Observable<boolean> {
     // Simulate a delay in the login process
@@ -37,20 +35,5 @@ export class AuthService {
     this.isLoggedIn = false;
     this.cookieService.delete('token');
     localStorage.removeItem('token');
-  }
-
-  setIsLogin() {
-    if (isPlatformBrowser(this.platformId)) {
-      // Initialize the 'isLoggedIn' property based on the presence of a token in localStorage
-      this.isLoggedIn = localStorage.getItem('token') !== null;
-    }
-    return this.isLoggedIn;
-  }
-
-  checkToken(): any {
-    if (isPlatformBrowser(this.platformId)) {
-      // Initialize the 'isLoggedIn' property based on the presence of a token in localStorage
-      return (this.isLoggedIn = localStorage.getItem('token') !== null);
-    }
   }
 }

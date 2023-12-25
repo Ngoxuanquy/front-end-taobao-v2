@@ -12,27 +12,20 @@ import { AuthService } from '../core/services/auth.service';
 @Injectable({
   providedIn: 'root',
 })
-class Permissions {
-  canActivate(): boolean {
-    return true;
-  }
-}
-
 export class authGuard implements CanActivate {
-  constructor(
-    private authService: AuthService,
-    private permissions: Permissions,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(
-    route: ActivatedRouteSnapshot,
+    next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ):
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree>
-    | boolean
-    | UrlTree {
-    return this.permissions.canActivate(this.currentUser, route.params.id);
+  ): boolean | UrlTree | Observable<boolean | UrlTree> {
+    console.log(this.authService.isLoggedIn);
+
+    if (this.authService.isLoggedIn) {
+      return true;
+    }
+
+    // Use UrlTree to navigate to the login page
+    return this.router.createUrlTree(['/admin/login']);
   }
 }
