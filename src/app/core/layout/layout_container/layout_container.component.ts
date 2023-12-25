@@ -82,15 +82,15 @@ export class Layout_containerComponent implements OnInit {
   isCollapsed = false;
 
   handlePopoverVisibility(isVisible: any): void {
-    if (isVisible) {
-      // Popover is opened
-      console.log('Popover opened');
-      // Add your logic for when the popover is opened
-    } else {
-      // Popover is closed
-      console.log('Popover closed');
-      // Add your logic for when the popover is closed
-    }
+    // if (isVisible) {
+    //   // Popover is opened
+    //   console.log('Popover opened');
+    //   // Add your logic for when the popover is opened
+    // } else {
+    //   // Popover is closed
+    //   console.log('Popover closed');
+    //   // Add your logic for when the popover is closed
+    // }
   }
 
   handleContentClick(): void {
@@ -98,9 +98,9 @@ export class Layout_containerComponent implements OnInit {
     this.cookieService.delete('token');
     this.cookieService.delete('name');
 
-    localStorage.clear();
+    // localStorage.clear();
+    sessionStorage.clear();
 
     this.router.navigate(['/auth/login']);
-    location.reload();
   }
 }

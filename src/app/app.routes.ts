@@ -7,14 +7,14 @@ export const routes: Routes = [
     path: 'admin',
     // canActivate: [authGuard], // Corrected case
     loadChildren: () =>
-      import('./core/pipes/layout_container/layout.routes').then(
+      import('./core/layout/layout_container/layout.routes').then(
         (m) => m.ADMIN_ROUTES
       ),
   },
   {
     path: 'auth',
     loadChildren: () =>
-      import('./core/pipes/layout_login/layouLogin.routes').then(
+      import('./core/layout/layout_login/layouLogin.routes').then(
         (m) => m.LOGIN_ROUTES
       ),
   },

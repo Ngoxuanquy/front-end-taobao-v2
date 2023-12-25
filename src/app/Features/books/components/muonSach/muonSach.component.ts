@@ -52,7 +52,6 @@ export class MuonSachComponent implements OnInit {
 
   // Tắt modal của lịch
   handleCancelCalendar(): void {
-    console.log('Button cancel clicked!');
     this.isVisibleCalendar = false;
   }
 
@@ -70,7 +69,17 @@ export class MuonSachComponent implements OnInit {
     ) {
       this.borrowBooksService.borrowBooks(this.valueUserBorrow).subscribe(
         (success) => {
-          this.borrowBooksService.reduceTheNumberOf(this.borrowBooks._id, 1);
+          this.borrowBooksService
+            .reduceTheNumberOf(this.borrowBooks._id, 1)
+            .subscribe(
+              (response) => {
+                // Handle successful response here
+              },
+              (error) => {
+                // Handle error here
+                console.error('Error reducing book quantity', error);
+              }
+            );
           this.isVisibleMuon = false;
 
           if (success.metadata.status == 'error') {
@@ -97,12 +106,9 @@ export class MuonSachComponent implements OnInit {
 
   handleCancel(): void {
     this.isVisibleMuon = false;
-    console.log('Button cancel clicked!');
     this.typeMuonChange.emit(this.isVisibleMuon);
 
     const test = document.getElementById(`book`);
-
-    console.log({ test });
   }
 
   // Xử lý ngày trả không được bé hơn ngày hiện tại
@@ -129,10 +135,7 @@ export class MuonSachComponent implements OnInit {
     };
   }
 
-  onPanelChange(change: { date: Date; mode: string }): void {
-    console.log(`Current value: ${change.date}`);
-    console.log(`Current mode: ${change.mode}`);
-  }
+  onPanelChange(change: { date: Date; mode: string }): void {}
 
   // Lịch ngày trả
   handleOkCalendar(): void {

@@ -112,26 +112,28 @@ export class List_booksComponent implements OnInit {
   // truyeenf duw lieuj dder bat tat madel
   setIsUpdateForm(selectedValue: any) {
     this.isUpdateForm = selectedValue;
-
-    const dataPromise = this.booksService.getDataValueType(1);
-    dataPromise
-      .then((data) => {
-        // Use the data here
+    this.booksService.getDataValueType(1).subscribe(
+      (data) => {
+        // Handle successful response
         this.newArray = data;
         this.isLoading = false;
-      })
-      .catch((error) => {
-        // Handle errors here
-      });
+      },
+      (error) => {
+        // Handle error
+        console.error('Error:', error);
+      }
+    );
 
-    return this.booksService
-      .loadData()
-      .then((dataTest) => {
-        this.newArray = dataTest;
-      })
-      .catch((error) => {
-        console.error('Error setting isBorrowBooksForm:', error);
-      });
+    return this.booksService.loadData().subscribe(
+      (data) => {
+        // Handle successful response
+        this.newArray = data;
+      },
+      (error) => {
+        // Handle error
+        console.error('Error:', error);
+      }
+    );
   }
 
   isBorrowBooksForm: any = false;
@@ -139,7 +141,6 @@ export class List_booksComponent implements OnInit {
 
   setDataSearch(data: any) {
     this.newArraySearch = data;
-    console.log({ data });
     if (data.length > 0) {
       this.isSearch = false;
     } else {
@@ -155,7 +156,6 @@ export class List_booksComponent implements OnInit {
   //Chi tieets sachs ddeer suar
   selectedItem: any;
   showModal(item: any): void {
-    console.log(item);
     this.isVisible = true;
     this.selectedItem = item;
     this.isUpdateForm = true;
@@ -166,14 +166,12 @@ export class List_booksComponent implements OnInit {
   borrowBooks: any;
   //Xử lý mượn sách
   hanldeMuon(item: any): void {
-    console.log(item);
     this.borrowBooks = item;
     // this.isVisibleMuon = true;
     this.isBorrowBooksForm = true;
   }
 
   handleCancelMuon(): void {
-    console.log('Button cancel clicked!');
     // this.isVisibleMuon = false;
     this.isLoadingMuon = false;
   }
@@ -182,25 +180,28 @@ export class List_booksComponent implements OnInit {
   setIsBorrowBooksForm(selectedValue: any) {
     this.isBorrowBooksForm = selectedValue;
 
-    const dataPromise = this.booksService.getDataValueType(1);
-    dataPromise
-      .then((data) => {
-        // Use the data here
+    this.booksService.getDataValueType(1).subscribe(
+      (data) => {
+        // Handle successful response
         this.newArray = data;
         this.isLoading = false;
-      })
-      .catch((error) => {
-        // Handle errors here
-      });
+      },
+      (error) => {
+        // Handle error
+        console.error('Error:', error);
+      }
+    );
 
-    return this.booksService
-      .loadData()
-      .then((dataTest) => {
-        this.newArray = dataTest;
-      })
-      .catch((error) => {
-        console.error('Error setting isBorrowBooksForm:', error);
-      });
+    return this.booksService.loadData().subscribe(
+      (data) => {
+        // Handle successful response
+        this.newArray = data;
+      },
+      (error) => {
+        // Handle error
+        console.error('Error:', error);
+      }
+    );
   }
 
   //Xóa sách bằng id
@@ -215,7 +216,6 @@ export class List_booksComponent implements OnInit {
             elementToRemove
           );
         }
-        console.log('Book deleted successfully');
       },
       (error) => {
         // Handle error if needed
@@ -230,30 +230,33 @@ export class List_booksComponent implements OnInit {
     //   this.typeBooks = data.metadata;
     // });
 
-    const dataPromise = this.booksService.getDataValueType(1);
-    dataPromise
-      .then((data) => {
-        // Use the data here
+    this.booksService.getDataValueType(1).subscribe(
+      (data) => {
+        // Handle successful response
         this.newArray = data;
         this.isLoading = false;
-      })
-      .catch((error) => {
-        // Handle errors here
-      });
+      },
+      (error) => {
+        // Handle error
+        console.error('Error:', error);
+      }
+    );
   }
 
   //Phân trang theo page
   onPageChange(page: number): void {
     this.isLoading = true;
-    const dataPromise = this.booksService.getDataValueType(page);
-    dataPromise
-      .then((data) => {
-        // Use the data here
+
+    this.booksService.getDataValueType(1).subscribe(
+      (data) => {
+        // Handle successful response
         this.newArray = data;
         this.isLoading = false;
-      })
-      .catch((error) => {
-        // Handle errors here
-      });
+      },
+      (error) => {
+        // Handle error
+        console.error('Error:', error);
+      }
+    );
   }
 }

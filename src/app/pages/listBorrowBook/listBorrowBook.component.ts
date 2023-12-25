@@ -57,7 +57,6 @@ export class ListBorrowBookComponent implements OnInit {
   //lấy value khi select vào type
   onSelectChange(value: any): void {
     this.selectedValue = value;
-    console.log('Selected value:', this.selectedValue);
   }
 
   //tìm kiếm

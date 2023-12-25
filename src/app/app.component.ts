@@ -5,7 +5,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { RouterModule, Routes } from '@angular/router';
-import { Layout_containerComponent } from './core/pipes/layout_container/layout_container.component';
+import { Layout_containerComponent } from './core/layout/layout_container/layout_container.component';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 // import { AuthService } from './core/services/auth.service';
@@ -13,7 +13,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, Inject } from '@angular/core';
 import { ChildrenOutletContexts, RouterLink } from '@angular/router';
 import { slideInAnimation } from './shared/animations';
-import { AuthService } from './core/services/auth.service';
+import { AuthService } from './auth/services/auth.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     // const hasToken = this.cookieService.check('token');
     if (isPlatformBrowser(this.platformId)) {
-      const hasToken = localStorage.getItem('token') !== null;
+      const hasToken = sessionStorage.getItem('token') !== null;
 
       this.authService.setIsLogin(hasToken);
     }

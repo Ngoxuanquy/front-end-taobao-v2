@@ -3,6 +3,7 @@ import { SelectTypeBookComponent } from '../../../../components/selectTypeBook/s
 import { FormsModule } from '@angular/forms';
 import { FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { BooksService } from '../../services/books.service';
+import { Observable, catchError, from, switchMap, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-search_book',
@@ -28,22 +29,16 @@ export class Search_bookComponent implements OnInit {
     this.selectedTypeDetail = selectedValue;
   }
 
-  async handleSearch(): Promise<void> {
-    try {
-      console.log(this.name_search);
-
-      const data = await this.booksService.search(
-        this.name_search,
-        this.selectedTypeDetail
-      );
-
-      console.log({ data });
-
-      this.searchChange.emit(data);
-    } catch (error) {
-      console.error('Error handling search:', error);
-      // Handle the error as needed
-    }
+  handleSearch() {
+    this.booksService.search('example_name', 'example_type').subscribe(
+      (searchResults) => {
+        console.log({ searchResults });
+        this.searchChange.emit(searchResults);
+      },
+      (error) => {
+        console.error('Error during search:', error);
+      }
+    );
   }
 
   //Lấy full newArray

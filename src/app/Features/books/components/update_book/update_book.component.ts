@@ -33,7 +33,6 @@ export class Update_bookComponent implements OnInit {
 
   ngOnInit() {
     this.isVisible = this.isUpdateForm;
-    console.log(this.isUpdateForm);
 
     this.nameDetail = this.selectedItem?.name_book;
     this.soluongDetail = this.selectedItem?.original_number;
@@ -52,9 +51,6 @@ export class Update_bookComponent implements OnInit {
   }
 
   handleOk(): any {
-    console.log(this.selectedItem);
-    console.log(this.selectedItem._id);
-
     this.booksService
       .update(
         this.selectedItem._id,
@@ -67,8 +63,6 @@ export class Update_bookComponent implements OnInit {
           // Handle success if needed
           this.isVisible = false;
           this.typeDetailChange.emit(this.isVisible);
-
-          console.log('Book created successfully');
         },
         (error) => {
           // Handle error if needed
@@ -80,7 +74,5 @@ export class Update_bookComponent implements OnInit {
   handleCancel(): void {
     this.isVisible = false;
     this.typeDetailChange.emit(this.isVisible);
-
-    console.log('Button cancel clicked!');
   }
 }

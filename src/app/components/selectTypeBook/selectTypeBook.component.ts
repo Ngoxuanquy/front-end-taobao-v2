@@ -30,13 +30,11 @@ export class SelectTypeBookComponent implements OnInit {
   onTypeDetailChange() {
     // Emit the selected value to the parent component
     this.typeDetailChange.emit(this.typeDetail);
-    console.log(this.typeDetail);
   }
 
   ngOnInit() {
     this.getDataTypeBook(1).subscribe((data: any) => {
       this.typeBooks = data.metadata;
-      console.log({ data1: data.metadata });
     });
   }
 }

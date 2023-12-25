@@ -1,6 +1,6 @@
 import { Injectable, Renderer2 } from '@angular/core';
 import { Observable, forkJoin, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
@@ -32,64 +32,54 @@ export class TypeBookService {
 
   //lấy dữ liệu mguwoif mượn
   getData(page: Number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/typeBook/getAll/${page}`).pipe(
-      tap((data) => {
-        return data;
-      }),
-      catchError(this.handleError('getData', []))
-    );
+    return this.http.get<any>(`${this.apiUrl}/typeBook/getAll/${page}`);
   }
 
   //lấy dữ liệu sách
-  getDataBooks(page: Number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/book/getAll/${page}`).pipe(
-      tap((data) => {
-        return data;
-      }),
-      catchError(this.handleError('getData', []))
-    );
+  getDataBooks(page: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/book/getAll/${page}`);
   }
 
   //check dữ liệu nếu có type hay để xóa
-  getDataValueType(page: any): any {
+  getDataValueType(page: any): Observable<any[]> {
     return new Observable((observer) => {
-      forkJoin([
-        this.getData(page !== '' ? page : 1),
-        this.getDataBooks(1),
-      ]).subscribe(
-        ([typeData, data]) => {
-          this.datas = typeData.metadata;
-          this.apiBooks = data.metadata;
+      forkJoin([this.getData(page !== '' ? page : 1), this.getDataBooks(1)])
+        .pipe(
+          map(([typeData, data]) => {
+            this.datas = typeData.metadata;
+            this.apiBooks = data.metadata;
 
-          // nếu có thì thêm 1 trường tên là TRạng thái nếu có thì là Không được xóa và ngược lại
-          this.datas = this.datas.map((item1) => {
-            const correspondingItem2 = this.apiBooks.find((item2) => {
-              return item1._id == item2.type;
+            // Add a new property "TrangThai" based on the condition
+            this.datas = this.datas.map((item1) => {
+              const correspondingItem2 = this.apiBooks.find((item2) => {
+                return item1._id == item2.type;
+              });
+
+              return {
+                ...item1,
+                TrangThai: correspondingItem2 ? 'Không được xóa' : 'Được xóa',
+              };
             });
 
-            if (correspondingItem2) {
-              return {
-                ...item1,
-                TrangThai: 'Không được xóa',
-              };
-            } else {
-              return {
-                ...item1,
-                TrangThai: 'Được xóa',
-              };
-            }
-          });
-          observer.next(this.datas);
-          observer.complete();
-          console.log(this.datas);
-          return this.datas;
-        },
-        (error) => {
-          console.error('Error fetching data:', error);
-        }
-      );
+            return this.datas;
+          }),
+          catchError((error) => {
+            console.error('Error fetching data:', error);
+            return throwError(error);
+          })
+        )
+        .subscribe(
+          (result) => {
+            observer.next(result);
+            observer.complete();
+          },
+          (error) => {
+            observer.error(error);
+          }
+        );
     });
   }
+
   create(name_type: any): Observable<boolean> {
     return this.http
       .post<any>(`${this.apiUrl}/typeBook/createTypeBook`, {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
@@ -22,7 +22,6 @@ export class BorrowBooksService {
   ) {
     this.initializeAppService.initializeApp().subscribe(() => {
       this.apiUrl = this.initializeAppService.getApiUrl();
-      console.log(this.apiUrl);
     });
   }
 
@@ -41,11 +40,14 @@ export class BorrowBooksService {
   //lấy dữ liệu bảng mượn sách
   getData(page: Number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/borrowBook/getAll/${page}`).pipe(
-      tap((data) => {
-        this.datas = data;
+      map((data) => {
+        // You can add custom logic here to transform the data if needed
         return data;
       }),
-      catchError(this.handleError('getData', []))
+      catchError((error) => {
+        // Log the error and rethrow it to propagate it to the subscriber
+        throw error;
+      })
     );
   }
 
@@ -70,7 +72,6 @@ export class BorrowBooksService {
       const searchName = this.removeAccents(
         searchs.value.name_user.toLowerCase()
       );
-      console.log({ datasearch: this.datas });
       // xử lý tìm kiếm gần đúng và đã xóa dấu
       const results = this.datas.metadata.filter(
         (book: any) =>
@@ -108,49 +109,51 @@ export class BorrowBooksService {
         tap((response) => {
           // Handle the response if needed
           // window.location.reload();
-          console.log('Successfully borrowed books', response);
         }),
         catchError(this.handleError('borrowBooks'))
+      );
+  }
+
+  reduceTheNumberOf(id: any, quantity: number): Observable<any> {
+    return this.http
+      .post<any>(`${this.apiUrl}/book/updateBookQuantity`, { id, quantity })
+      .pipe(
+        switchMap((response) => {
+          // You can perform any additional logic with the response here if needed
+          return response;
+        }),
+        catchError((error) => {
+          // Handle error if needed
+          console.error('Error deleting book', error);
+          return throwError(error);
+        })
       );
   }
 
   giveBookBack(id: any, bookId: any): Observable<any> {
     return this.http
       .post<any>(`${this.apiUrl}/borrowBook/updateTraSach`, {
-        id, // Use bookId instead of id
+        id: bookId, // Use bookId instead of id
       })
       .pipe(
-        tap(
-          (response) => {
-            this.message.create('success', 'Cập nhật thành công!!!', {
-              nzDuration: 3000,
-            });
-
-            this.reduceTheNumberOf(bookId, -1);
-          },
-          (error) => {
-            console.error('Error updating book', error);
-          }
-        )
-      );
-  }
-
-  reduceTheNumberOf(id: any, quantity: Number): void {
-    this.http
-      .post<any>(
-        `${this.apiUrl}/book/updateBookQuantity`,
-        {
-          id,
-          quantity: quantity,
-        }
-        // { headers: headers }
-      )
-      .subscribe(
-        (response) => {},
-        (error) => {
-          // Handle error if needed
-          console.error('Error deleting book', error);
-        }
+        tap(() => {
+          this.message.create('success', 'Cập nhật thành công!!!', {
+            nzDuration: 3000,
+          });
+          this.reduceTheNumberOf(bookId, -1).subscribe(
+            (response) => {
+              // Handle successful response here
+            },
+            (error) => {
+              // Handle error here
+              console.error('Error reducing book quantity', error);
+            }
+          );
+        }),
+        catchError((error) => {
+          console.error('Error updating book', error);
+          throw error; // Re-throw the error to propagate it further
+        })
       );
   }
 

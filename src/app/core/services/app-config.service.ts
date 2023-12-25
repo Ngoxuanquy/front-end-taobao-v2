@@ -14,7 +14,6 @@ export class InitializeAppService {
   public initializeApp(): Observable<any> {
     return this.http.get('./assets/config.json').pipe(
       tap((data: any) => {
-        console.log({ data });
         this.apiUrl = data.ApiUrl; // Assuming the API URL is a property in your config.json
       }),
       catchError((error) => {
@@ -25,7 +24,6 @@ export class InitializeAppService {
   }
 
   public getApiUrl(): string {
-    console.log(this.apiUrl);
     return this.apiUrl;
   }
 }

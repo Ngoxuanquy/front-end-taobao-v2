@@ -20,22 +20,10 @@ import {
   provideHttpClient,
   withFetch,
 } from '@angular/common/http';
-import { HeaderInterceptor } from './core/pipes/header-Http-Token/header-Http-Token.component';
 import { Observable, firstValueFrom, tap } from 'rxjs';
 import { InitializeAppService } from './core/services/app-config.service';
+import { HeaderInterceptor } from './core/client/header-Http-Token';
 registerLocaleData(vi);
-
-// export function initializeApp(http: HttpClient) {
-//   return (): Promise<any> =>
-//     firstValueFrom(
-//       http.get('./assets/config.json').pipe(
-//         tap((ApiUrl) => {
-//           console.log({ ApiUrl });
-//         })
-//       )
-//     );
-
-// }
 
 export function initializeApp(initializeAppService: InitializeAppService) {
   return (): Observable<any> => {

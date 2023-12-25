@@ -52,18 +52,15 @@ export class CreateBookComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.booksService
-      .getTypeData(1)
-      .then((data) => {
-        // Handle successful response data here
-        this.datas = data.metadata;
-
-        console.log('Data:', data);
-      })
-      .catch((error) => {
-        // Handle errors here
+    this.booksService.getTypeData(1).subscribe(
+      (data) => {
+        // Handle successful response
+      },
+      (error) => {
+        // Handle error
         console.error('Error:', error);
-      });
+      }
+    );
   }
 
   // xử lý nút Gửi request dùng subscribe để chạy hàm postBook
@@ -71,7 +68,6 @@ export class CreateBookComponent implements OnInit {
     this.booksService.create(this.create_value.value).subscribe(
       (success) => {
         // Handle success if needed
-        console.log('Book created successfully');
       },
       (error) => {
         // Handle error if needed

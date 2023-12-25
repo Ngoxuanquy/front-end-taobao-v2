@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { Observable, forkJoin, from, throwError } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
@@ -24,7 +24,6 @@ export class BooksService {
     // Assuming this code is part of a component
     this.initializeAppService.initializeApp().subscribe(() => {
       this.apiUrl = this.initializeAppService.getApiUrl();
-      console.log(this.apiUrl);
     });
   }
 
@@ -37,7 +36,6 @@ export class BooksService {
   datas: any;
 
   create(createValue: any): Observable<boolean> {
-    console.log({ createValue });
     return this.http
       .post<any>(`${this.apiUrl}/book/createBook`, {
         name_book: createValue.name,
@@ -52,8 +50,7 @@ export class BooksService {
           });
           this.router.navigate(['admin/listbooks']);
           // Process or log the data here
-        }),
-        catchError(this.handleError('create', false))
+        })
       );
   }
 
@@ -67,8 +64,7 @@ export class BooksService {
           this.message.create('success', 'Xóa thành công!!!', {
             nzDuration: 3000,
           });
-        }),
-        catchError(this.handleError('deleteBook', false))
+        })
       );
     } else {
       // Handle cancel or do nothing
@@ -77,7 +73,6 @@ export class BooksService {
   }
 
   update(id: any, type: any, name_book: any, soluong: any): Observable<any> {
-    console.log({ id });
     const requestBody = {
       id: id,
       name_book: name_book,
@@ -97,40 +92,33 @@ export class BooksService {
       );
   }
 
-  getData(page: number): Promise<any> {
-    return this.http
-      .get<any>(`${this.apiUrl}/book/getAll/${page}`)
-      .pipe(
-        tap((data) => {
-          console.log({ data });
-          // You might want to return data here if needed
-        }),
-        catchError((error) => {
-          console.error('Error fetching book data:', error);
-          throw error;
-        })
-      )
-      .toPromise();
+  getData(page: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/book/getAll/${page}`).pipe(
+      tap((data) => {
+        // You can perform any side effects here
+      }),
+      catchError((error) => {
+        console.error('Error fetching book data:', error);
+        return throwError(error);
+      })
+    );
   }
 
-  getTypeData(page: number): Promise<any> {
-    return this.http
-      .get<any>(`${this.apiUrl}/typeBook/getAll/${page}`)
-      .pipe(
-        tap((data) => {
-          // You might want to return data here if needed
-        }),
-        catchError((error) => {
-          console.error('Error fetching type data:', error);
-          throw error;
-        })
-      )
-      .toPromise();
+  getTypeData(page: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/typeBook/getAll/${page}`).pipe(
+      tap((data) => {
+        // You can perform any side effects here
+      }),
+      catchError((error) => {
+        console.error('Error fetching type data:', error);
+        return throwError(error);
+      })
+    );
   }
 
-  loadData() {
-    return Promise.all([this.getData(1), this.getTypeData(1)])
-      .then(([data, typeData]) => {
+  loadData(): Observable<any[]> {
+    return forkJoin([this.getData(1), this.getTypeData(1)]).pipe(
+      map(([data, typeData]) => {
         this.datas = data.metadata;
         this.dataTypes = typeData.metadata;
 
@@ -150,42 +138,50 @@ export class BooksService {
         });
 
         return this.newArray;
-      })
-      .catch((error) => {
+      }),
+      catchError((error) => {
         console.error('Error fetching data:', error);
-        throw error; // rethrow the error to propagate it to the caller
-      });
+        return throwError(error);
+      })
+    );
   }
-  getDataValueType(page: any): Promise<any> {
-    return new Promise((resolve, reject) => {
-      Promise.all([this.getData(page !== '' ? page : 1), this.getTypeData(1)])
-        .then(([bookData, typeData]) => {
-          this.books = bookData.metadata;
-          this.types = typeData.metadata;
+  getDataValueType(page: any): Observable<any[]> {
+    return new Observable((observer) => {
+      forkJoin([this.getData(page !== '' ? page : 1), this.getTypeData(1)])
+        .pipe(
+          map(([bookData, typeData]) => {
+            this.books = bookData.metadata;
+            this.types = typeData.metadata;
 
-          this.Arrays = this.books.map((book: any) => {
-            const correspondingType = this.types.find(
-              (type: any) => book.type === type._id
-            );
+            this.Arrays = this.books.map((book: any) => {
+              const correspondingType = this.types.find(
+                (type: any) => book.type === type._id
+              );
 
-            if (correspondingType) {
-              return {
-                ...book,
-                type_Book: correspondingType.type_Book,
-              };
-            }
+              if (correspondingType) {
+                return {
+                  ...book,
+                  type_Book: correspondingType.type_Book,
+                };
+              }
 
-            return book;
-          });
+              console.log({ book: this.Arrays });
 
-          // Resolve the Promise with the data you want to retrieve
-          resolve(this.Arrays);
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-          // Reject the Promise if there's an error
-          reject(error);
-        });
+              return book;
+            });
+
+            // Emit the result using next() method
+            observer.next(this.Arrays);
+            observer.complete();
+          }),
+          catchError((error) => {
+            console.error('Error fetching data:', error);
+            // Emit the error using error() method
+            observer.error(error);
+            return throwError(error);
+          })
+        )
+        .subscribe();
     });
   }
 
@@ -193,31 +189,31 @@ export class BooksService {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
 
-  async search(name_text: string, type_text: string): Promise<any[]> {
-    try {
-      await this.getDataValueType(1);
+  search(name_text: string, type_text: string): Observable<any[]> {
+    return this.getDataValueType(1).pipe(
+      switchMap((data) => {
+        const searchWithoutAccents = this.removeAccents(
+          name_text.toLowerCase()
+        );
 
-      console.log(this.Arrays);
-      const searchWithoutAccents = this.removeAccents(name_text.toLowerCase());
+        const results = data.filter(
+          (book) =>
+            this.removeAccents(book.name_book.toLowerCase()).includes(
+              searchWithoutAccents
+            ) && book.type === type_text
+        );
 
-      const results = this.Arrays.filter(
-        (book: any) =>
-          this.removeAccents(book.name_book.toLowerCase()).includes(
-            searchWithoutAccents
-          ) && book.type === type_text
-      );
+        console.log({ results });
 
-      this.searchedBooks = [...results];
-      console.log(this.searchedBooks);
-
-      return this.searchedBooks;
-    } catch (error) {
-      console.error('Error searching:', error);
-      // You may want to throw the error here or handle it appropriately
-      throw error;
-    }
+        return from([results]);
+      }),
+      catchError((error) => {
+        console.error('Error searching:', error);
+        // You may want to throw the error here or handle it appropriately
+        return throwError(error);
+      })
+    );
   }
-
   private handleError(operation = 'operation', result?: any) {
     return (error: any): Observable<any> => {
       console.error(error); // log to console instead
