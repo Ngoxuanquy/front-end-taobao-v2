@@ -15,16 +15,28 @@ import { AuthService } from '../core/services/auth.service';
 export class authGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
+  getItem(key: string): any {
+    const storedItem = sessionStorage.getItem(key);
+    return storedItem ? JSON.parse(storedItem) : null;
+  }
+
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean | UrlTree | Observable<boolean | UrlTree> {
-    console.log(this.authService.isLoggedIn);
+    // Check if sessionStorage is defined
+    if (typeof sessionStorage !== 'undefined') {
+      if (!this.authService.isLoggedIn) {
+        // Use navigateByUrl instead of createUrlTree to navigate to the login page
+        this.router.navigateByUrl('/auth/login');
+        return false;
+      }
 
-    if (!this.authService.isLoggedIn) {
-      this.router.createUrlTree(['auth/login']);
+      return true;
+    } else {
+      // Handle the case where sessionStorage is not available
+      console.error('sessionStorage is not available');
       return false;
     }
-    return true;
   }
 }

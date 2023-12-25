@@ -128,6 +128,11 @@ export class LoginComponent implements OnInit {
                 JSON.stringify(response.metadata.tokens.accessToken)
               );
 
+              sessionStorage.setItem(
+                'token',
+                JSON.stringify(response.metadata.tokens.accessToken)
+              );
+
               this.isLoading = false;
 
               // Usually you would use the redirect URL from the auth service.
