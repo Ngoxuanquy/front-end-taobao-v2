@@ -98,7 +98,6 @@ export class BooksService {
   }
 
   getData(page: number): Promise<any> {
-    console.log(`${this.apiUrl}/book/getAll/${page}`);
     return this.http
       .get<any>(`${this.apiUrl}/book/getAll/${page}`)
       .pipe(

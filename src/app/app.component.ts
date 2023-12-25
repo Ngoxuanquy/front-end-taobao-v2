@@ -8,7 +8,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { Layout_containerComponent } from './core/pipes/layout_container/layout_container.component';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
-import { AuthService } from './core/services/auth.service';
+// import { AuthService } from './core/services/auth.service';
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, Inject } from '@angular/core';
 import { ChildrenOutletContexts, RouterLink } from '@angular/router';
@@ -35,7 +35,7 @@ import { slideInAnimation } from './shared/animations';
 export class AppComponent implements OnInit {
   constructor(
     private cookieService: CookieService,
-    private authService: AuthService,
+    // private authService: AuthService,
     private router: Router,
     private contexts: ChildrenOutletContexts,
 
@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       const hasToken = localStorage.getItem('token') !== null;
 
-      this.authService.setIsLogin(hasToken);
+      // this.authService.setIsLogin(hasToken);
     }
   }
 }

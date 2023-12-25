@@ -49,23 +49,7 @@ export class LoginComponent implements OnInit {
     password: new FormControl(''),
   });
 
-  ngOnInit() {
-    console.log(this.authService.isLoggedIn);
-
-    if (this.authService.isLoggedIn == true) {
-      console.log('abccc');
-      this.router.navigate(['/']);
-
-      return true;
-    } else {
-      // Create a dummy session id
-      // Navigate to the login page with extras
-      this.router.navigate(['auth/login']);
-      console.log('abnvcbc');
-
-      return false;
-    }
-  }
+  ngOnInit() {}
 
   getMessage() {
     return 'Logged ' + (this.authService.isLoggedIn ? 'in' : 'out');

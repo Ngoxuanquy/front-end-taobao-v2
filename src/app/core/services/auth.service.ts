@@ -1,4 +1,4 @@
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject, NgModule } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { tap, delay } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
@@ -17,7 +17,7 @@ export class AuthService {
     // Check if the application is running in the browser
     if (isPlatformBrowser(this.platformId)) {
       // Initialize the 'isLoggedIn' property based on the presence of a token in localStorage
-      this.isLoggedIn = localStorage.getItem('token') !== null;
+      // this.isLoggedIn = localStorage.getItem('token') !== null;
     }
   }
 
@@ -39,7 +39,18 @@ export class AuthService {
     localStorage.removeItem('token');
   }
 
-  setIsLogin(state: boolean) {
-    this.isLoggedIn = state;
+  setIsLogin() {
+    if (isPlatformBrowser(this.platformId)) {
+      // Initialize the 'isLoggedIn' property based on the presence of a token in localStorage
+      this.isLoggedIn = localStorage.getItem('token') !== null;
+    }
+    return this.isLoggedIn;
+  }
+
+  checkToken(): any {
+    if (isPlatformBrowser(this.platformId)) {
+      // Initialize the 'isLoggedIn' property based on the presence of a token in localStorage
+      return (this.isLoggedIn = localStorage.getItem('token') !== null);
+    }
   }
 }

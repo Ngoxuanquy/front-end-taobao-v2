@@ -6,28 +6,33 @@ import {
   Router,
   UrlTree,
 } from '@angular/router';
+import { Observable } from 'rxjs';
 import { AuthService } from '../core/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
+class Permissions {
+  canActivate(): boolean {
+    return true;
+  }
+}
+
 export class authGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private permissions: Permissions,
+    private router: Router
+  ) {}
 
-  async canActivate(
-    next: ActivatedRouteSnapshot,
+  canActivate(
+    route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Promise<boolean | UrlTree> {
-    // Use async/await to handle asynchronous operations
-
-    const isLoggedIn: boolean = this.authService.isLoggedIn;
-
-    if (isLoggedIn == true) {
-      return true;
-    } else {
-      this.router.navigate(['/admin/login']);
-
-      return false;
-    }
+  ):
+    | Observable<boolean | UrlTree>
+    | Promise<boolean | UrlTree>
+    | boolean
+    | UrlTree {
+    return this.permissions.canActivate(this.currentUser, route.params.id);
   }
 }

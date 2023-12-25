@@ -18,6 +18,7 @@ import {
   HTTP_INTERCEPTORS,
   HttpClient,
   provideHttpClient,
+  withFetch,
 } from '@angular/common/http';
 import { HeaderInterceptor } from './core/pipes/header-Http-Token/header-Http-Token.component';
 import { Observable, firstValueFrom, tap } from 'rxjs';
@@ -51,6 +52,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(FormsModule),
     importProvidersFrom(HttpClientModule),
     provideAnimations(),
+    provideHttpClient(withFetch()),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HeaderInterceptor,

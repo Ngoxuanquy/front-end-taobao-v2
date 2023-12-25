@@ -19,5 +19,11 @@ export const routes: Routes = [
       ),
     // canActivate: [authGuard],
   },
-  { path: '**', component: LoginComponent },
+  {
+    path: '**',
+    loadChildren: () =>
+      import('./core/pipes/layout_login/layouLogin.routes').then(
+        (m) => m.WELCOME_ROUTES
+      ),
+  },
 ];
