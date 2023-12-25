@@ -52,7 +52,6 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(FormsModule),
     importProvidersFrom(HttpClientModule),
     provideAnimations(),
-    provideHttpClient(withFetch()),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HeaderInterceptor,
@@ -64,7 +63,7 @@ export const appConfig: ApplicationConfig = {
       useFactory: initializeApp,
       multi: true,
       // deps: [HttpClient],
-      deps: [InitializeAppService],
+      deps: [InitializeAppService, HttpClient],
     },
   ],
 };
