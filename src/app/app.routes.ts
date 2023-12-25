@@ -4,23 +4,23 @@ import { LoginComponent } from './auth/login/login.component';
 
 export const routes: Routes = [
   {
-    path: '',
-    canActivate: [authGuard], // Corrected case
+    path: 'admin',
+    // canActivate: [authGuard], // Corrected case
     loadChildren: () =>
       import('./core/pipes/layout_container/layout.routes').then(
-        (m) => m.WELCOME_ROUTES
+        (m) => m.ADMIN_ROUTES
       ),
   },
   {
     path: 'auth',
     loadChildren: () =>
       import('./core/pipes/layout_login/layouLogin.routes').then(
-        (m) => m.WELCOME_ROUTES
+        (m) => m.LOGIN_ROUTES
       ),
-    // canActivate: [authGuard],
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: '/admin',
+    pathMatch: 'full',
   },
 ];

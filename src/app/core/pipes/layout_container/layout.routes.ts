@@ -8,21 +8,16 @@ import { ListBookPagesComponent } from '../../../pages/Books/listBookPages/listB
 import { TypeBooksComponent } from '../../../pages/typeBooks/typeBooks.component';
 // import { CreateBookComponent } from '../../../Features/books/book.module';
 
-export const WELCOME_ROUTES: Routes = [
+export const ADMIN_ROUTES: Routes = [
   {
-    path: 'admin',
-    component: Layout_containerComponent,
+    path: '',
     canActivate: [authGuard],
+    component: Layout_containerComponent,
     children: [
-      {
-        path: '',
-        children: [
-          { path: 'listbooks', component: ListBookPagesComponent },
-          { path: 'createBooks', component: CreateComponent },
-          { path: 'listBorrowBook', component: ListBorrowBookComponent },
-          { path: 'typeBook', component: TypeBooksComponent },
-        ],
-      },
+      { path: 'listbooks', component: ListBookPagesComponent },
+      { path: 'createBooks', component: CreateComponent },
+      { path: 'listBorrowBook', component: ListBorrowBookComponent },
+      { path: 'typeBook', component: TypeBooksComponent },
     ],
   },
 ];

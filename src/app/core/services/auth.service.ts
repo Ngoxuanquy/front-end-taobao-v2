@@ -8,7 +8,7 @@ import { isPlatformBrowser } from '@angular/common';
   providedIn: 'root',
 })
 export class AuthService {
-  isLoggedIn = this.cookieService.check('token');
+  isLoggedIn = false;
 
   constructor(private cookieService: CookieService) {
     // Check if the application is running in the browser
@@ -28,5 +28,11 @@ export class AuthService {
     this.isLoggedIn = false;
     this.cookieService.delete('token');
     localStorage.removeItem('token');
+  }
+
+  setIsLogin(state: boolean) {
+    this.isLoggedIn = state;
+    console.log({ state });
+    console.log({ isLoggedIn: this.isLoggedIn });
   }
 }

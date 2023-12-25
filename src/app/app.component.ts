@@ -13,6 +13,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, Inject } from '@angular/core';
 import { ChildrenOutletContexts, RouterLink } from '@angular/router';
 import { slideInAnimation } from './shared/animations';
+import { AuthService } from './core/services/auth.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -35,7 +36,7 @@ import { slideInAnimation } from './shared/animations';
 export class AppComponent implements OnInit {
   constructor(
     private cookieService: CookieService,
-    // private authService: AuthService,
+    private authService: AuthService,
     private router: Router,
     private contexts: ChildrenOutletContexts,
 
@@ -54,7 +55,7 @@ export class AppComponent implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       const hasToken = localStorage.getItem('token') !== null;
 
-      // this.authService.setIsLogin(hasToken);
+      this.authService.setIsLogin(hasToken);
     }
   }
 }
