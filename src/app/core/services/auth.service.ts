@@ -8,17 +8,10 @@ import { isPlatformBrowser } from '@angular/common';
   providedIn: 'root',
 })
 export class AuthService {
-  isLoggedIn = false;
+  isLoggedIn = this.cookieService.check('token');
 
-  constructor(
-    private cookieService: CookieService,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
+  constructor(private cookieService: CookieService) {
     // Check if the application is running in the browser
-    if (isPlatformBrowser(this.platformId)) {
-      // Initialize the 'isLoggedIn' property based on the presence of a token in localStorage
-      // this.isLoggedIn = localStorage.getItem('token') !== null;
-    }
   }
 
   login(): Observable<boolean> {

@@ -21,9 +21,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    loadChildren: () =>
-      import('./core/pipes/layout_login/layouLogin.routes').then(
-        (m) => m.WELCOME_ROUTES
-      ),
+    redirectTo: '',
   },
 ];

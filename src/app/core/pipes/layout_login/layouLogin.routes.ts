@@ -7,12 +7,5 @@ export const WELCOME_ROUTES: Routes = [
   {
     path: 'login',
     component: LoginComponent,
-    canActivate: [authGuard],
-    children: [
-      {
-        path: 'login',
-        children: [{ path: 'login', component: LoginComponent }],
-      },
-    ],
   },
 ];
