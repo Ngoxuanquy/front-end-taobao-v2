@@ -12,7 +12,7 @@ import { InitializeAppService } from '../../../core/services/app-config.service'
   providedIn: 'root',
 })
 export class BorrowBooksService {
-  private apiUrl = '';
+  apiUrl = '';
   constructor(
     private cookieService: CookieService,
     private http: HttpClient,
@@ -20,9 +20,9 @@ export class BorrowBooksService {
     private router: Router,
     private initializeAppService: InitializeAppService
   ) {
-    this.initializeAppService.initializeApp().subscribe(() => {
-      this.apiUrl = this.initializeAppService.getApiUrl();
-    });
+    this.apiUrl = this.initializeAppService.getApiUrl();
+
+    console.log(this.apiUrl);
   }
 
   datas: any;
@@ -42,6 +42,7 @@ export class BorrowBooksService {
     return this.http.get<any>(`${this.apiUrl}/borrowBook/getAll/${page}`).pipe(
       map((data) => {
         // You can add custom logic here to transform the data if needed
+        this.datas = data;
         return data;
       }),
       catchError((error) => {
@@ -72,6 +73,8 @@ export class BorrowBooksService {
       const searchName = this.removeAccents(
         searchs.value.name_user.toLowerCase()
       );
+
+      console.log({ data: this.datas });
       // xử lý tìm kiếm gần đúng và đã xóa dấu
       const results = this.datas.metadata.filter(
         (book: any) =>
@@ -81,6 +84,8 @@ export class BorrowBooksService {
           book.type === searchs.value.selectedValue &&
           this.removeAccents(book.use_name.toLowerCase()).includes(searchName)
       );
+
+      console.log({ results });
 
       // trả về mảng mới
       return of([...results]);
@@ -133,7 +138,7 @@ export class BorrowBooksService {
   giveBookBack(id: any, bookId: any): Observable<any> {
     return this.http
       .post<any>(`${this.apiUrl}/borrowBook/updateTraSach`, {
-        id: bookId, // Use bookId instead of id
+        id: id, // Use bookId instead of id
       })
       .pipe(
         tap(() => {

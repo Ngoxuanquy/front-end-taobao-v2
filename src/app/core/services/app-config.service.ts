@@ -7,7 +7,7 @@ import { tap, catchError } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class InitializeAppService {
-  apiUrl: string = '';
+  private apiUrl: string = '';
 
   constructor(private http: HttpClient) {}
 

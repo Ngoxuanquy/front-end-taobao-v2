@@ -19,21 +19,20 @@ import { BooksService } from '../../services/books.service';
   ],
 })
 export class Update_bookComponent implements OnInit {
-  constructor(private booksService: BooksService) {}
+  isVisible: any = false;
+  datas: any;
+  //Chi tiết sách
+  nameDetail: any;
+  soluongDetail: any;
+  selectedTypeDetail: any;
   @Input() selectedItem: any;
   @Input() isUpdateForm: any;
   @Output() typeDetailChange = new EventEmitter<any>(); // EventEmitter to emit events to the parent component
 
-  isVisible: any = false;
-  datas: any;
-
-  //Chi tiết sách
-  nameDetail: any;
-  soluongDetail: any;
+  constructor(private booksService: BooksService) {}
 
   ngOnInit() {
     this.isVisible = this.isUpdateForm;
-
     this.nameDetail = this.selectedItem?.name_book;
     this.soluongDetail = this.selectedItem?.original_number;
 
@@ -43,8 +42,6 @@ export class Update_bookComponent implements OnInit {
       this.isVisible = false;
     }
   }
-
-  selectedTypeDetail: any;
 
   handleTypeDetail(selectedValue: any) {
     this.selectedTypeDetail = selectedValue;

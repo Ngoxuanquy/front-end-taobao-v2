@@ -22,9 +22,7 @@ export class AuthService {
     public router: Router // Injecting the Router service
   ) {
     // Check if the application is running in the browser
-    this.initializeAppService.initializeApp().subscribe(() => {
-      this.apiUrl = this.initializeAppService.getApiUrl();
-    });
+    this.apiUrl = this.initializeAppService.getApiUrl();
   }
 
   login(login_value: any): Observable<any> {

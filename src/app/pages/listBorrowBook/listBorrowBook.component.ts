@@ -29,16 +29,7 @@ import { BorrowBooksService } from '../../Features/books/services/borrowBooks.se
   ],
 })
 export class ListBorrowBookComponent implements OnInit {
-  constructor(
-    private http: HttpClient,
-    private cookieService: CookieService,
-    private message: NzMessageService,
-    private borrowBooksService: BorrowBooksService
-  ) {}
-
   datas: any[] = [];
-
-  //
   name_search: any;
   type_search: any;
   nameUser_search: any;
@@ -46,7 +37,7 @@ export class ListBorrowBookComponent implements OnInit {
   selectedValue: any;
   newArraySearch: any[] = [];
   isSearch: boolean = true;
-
+  pages: any = 1;
   isLoading: boolean = false;
   // xử lý lấy value để sreach/s
   searchs: any = new FormGroup({
@@ -54,6 +45,14 @@ export class ListBorrowBookComponent implements OnInit {
     name_user: new FormControl(''),
     selectedValue: new FormControl(''),
   });
+
+  constructor(
+    private http: HttpClient,
+    private cookieService: CookieService,
+    private message: NzMessageService,
+    private borrowBooksService: BorrowBooksService
+  ) {}
+
   //lấy value khi select vào type
   onSelectChange(value: any): void {
     this.selectedValue = value;
@@ -82,7 +81,6 @@ export class ListBorrowBookComponent implements OnInit {
     });
   }
 
-  pages: any = 1;
   onPageChange(page: number): void {
     this.isLoading = true;
     this.pages = Number(page);

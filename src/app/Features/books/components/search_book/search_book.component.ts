@@ -18,27 +18,28 @@ import { Observable, catchError, from, switchMap, throwError } from 'rxjs';
   ],
 })
 export class Search_bookComponent implements OnInit {
-  constructor(private booksService: BooksService) {}
-  @Output() searchChange = new EventEmitter<any>();
   //laay du lieu cuar select
   selectedTypeDetail: any;
-
   name_search: any = '';
+  @Output() searchChange = new EventEmitter<any>();
+
+  constructor(private booksService: BooksService) {}
 
   handleTypeDetail(selectedValue: any) {
     this.selectedTypeDetail = selectedValue;
   }
 
   handleSearch() {
-    this.booksService.search('example_name', 'example_type').subscribe(
-      (searchResults) => {
-        console.log({ searchResults });
-        this.searchChange.emit(searchResults);
-      },
-      (error) => {
-        console.error('Error during search:', error);
-      }
-    );
+    this.booksService
+      .search(this.name_search, this.selectedTypeDetail)
+      .subscribe(
+        (searchResults) => {
+          this.searchChange.emit(searchResults);
+        },
+        (error) => {
+          console.error('Error during search:', error);
+        }
+      );
   }
 
   //Lấy full newArray

@@ -22,9 +22,7 @@ export class BooksService {
     private initializeAppService: InitializeAppService
   ) {
     // Assuming this code is part of a component
-    this.initializeAppService.initializeApp().subscribe(() => {
-      this.apiUrl = this.initializeAppService.getApiUrl();
-    });
+    this.apiUrl = this.initializeAppService.getApiUrl();
   }
 
   Arrays: any;

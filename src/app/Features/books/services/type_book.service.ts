@@ -19,9 +19,7 @@ export class TypeBookService {
     private router: Router,
     private initializeAppService: InitializeAppService
   ) {
-    this.initializeAppService.initializeApp().subscribe(() => {
-      this.apiUrl = this.initializeAppService.getApiUrl();
-    });
+    this.apiUrl = this.initializeAppService.getApiUrl();
   }
 
   datas: any[] = [];

@@ -9,6 +9,7 @@ import { NzCalendarModule } from 'ng-zorro-antd/calendar';
 import { DatePipe } from '@angular/common';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { BorrowBooksService } from '../../services/borrowBooks.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-muonSach',
@@ -28,8 +29,11 @@ export class MuonSachComponent implements OnInit {
     private cookieService: CookieService,
     private http: HttpClient,
     private borrowBooksService: BorrowBooksService,
-    private message: NzMessageService
-  ) {}
+    private message: NzMessageService,
+    private titleService: Title
+  ) {
+    this.titleService.setTitle('Mượn sách');
+  }
 
   private apiUrl = 'http://localhost:3056/v1/api';
 

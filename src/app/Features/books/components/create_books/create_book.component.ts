@@ -13,6 +13,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { BooksService } from '../../services/books.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-create_book',
@@ -28,28 +29,30 @@ import { BooksService } from '../../services/books.service';
   ],
 })
 export class CreateBookComponent implements OnInit {
-  constructor(
-    private http: HttpClient, // Injecting the HttpClient service,
-    private cookieService: CookieService,
-    private message: NzMessageService,
-    private router: Router,
-    private booksService: BooksService
-  ) {}
-
   datas: any[] = [];
   selectedValue: any;
-
-  // lấy kiểu (đầu sách)
-  onSelectChange(value: any): void {
-    this.selectedValue = value;
-  }
-
   //dữ liệu khi tạo thêm sách lấy từ form
   create_value: any = new FormGroup({
     name: new FormControl(''),
     selectedValue: new FormControl(''),
     quantity: new FormControl(''),
   });
+
+  constructor(
+    private http: HttpClient, // Injecting the HttpClient service,
+    private cookieService: CookieService,
+    private message: NzMessageService,
+    private router: Router,
+    private booksService: BooksService,
+    private titleService: Title
+  ) {
+    this.titleService.setTitle('Tạo sách');
+  }
+
+  // lấy kiểu (đầu sách)
+  onSelectChange(value: any): void {
+    this.selectedValue = value;
+  }
 
   ngOnInit() {
     this.booksService.getTypeData(1).subscribe(

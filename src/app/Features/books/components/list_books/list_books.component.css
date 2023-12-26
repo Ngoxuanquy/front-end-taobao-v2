@@ -35,3 +35,11 @@ button[disabled] {
   color: #555; /* Text color */
   cursor: not-allowed;
 }
+
+.book-out-of-stock {
+  color: red;
+}
+
+.book-available {
+  color: green;
+}

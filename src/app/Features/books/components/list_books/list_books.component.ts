@@ -31,6 +31,7 @@ import {
   state,
 } from '@angular/animations';
 import { BooksService } from '../../services/books.service';
+import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-list-book',
   templateUrl: './list_books.component.html',
@@ -64,46 +65,45 @@ import { BooksService } from '../../services/books.service';
   ],
 })
 export class List_booksComponent implements OnInit {
-  constructor(
-    private http: HttpClient,
-    private cookieService: CookieService,
-    private message: NzMessageService,
-    private renderer: Renderer2,
-    private booksService: BooksService
-  ) {}
   private apiUrl = 'http://localhost:3056/v1/api';
 
   //api của list sách
   datas: any[] = [];
   //api kiểu sách
   dataTypes: any[] = [];
-
-  //
   isUpdateForm: boolean = false;
-
   //khai bao các modal
   isLoading: any = false;
   isVisible = false;
   isVisibleMuon = false;
   isVisibleCalendar = false;
-
   //Dữ liệu mượn
   isLoadingMuon: boolean = false;
-
   newArraySearch: any[] = [];
-
   isSearch: boolean = true;
-
   newArray: any[] = [];
-  //khởi tạo thuộc tính cho mảng mới
+  //laay du lieu cuar select
+  selectedTypeDetail: any;
+  isBorrowBooksForm: any = false;
+  selectedItem: any;
+  //xử lý hàm cập nhật sách
+  borrowBooks: any;
+
+  constructor(
+    private http: HttpClient,
+    private cookieService: CookieService,
+    private message: NzMessageService,
+    private renderer: Renderer2,
+    private booksService: BooksService,
+    private titleService: Title
+  ) {
+    this.titleService.setTitle('Danh sách sách');
+  }
 
   //Lấy full newArray
   handelGetAll(): void {
     this.isSearch = true;
   }
-
-  //laay du lieu cuar select
-  selectedTypeDetail: any;
 
   handleTypeDetail(selectedValue: any) {
     this.selectedTypeDetail = selectedValue;
@@ -126,17 +126,14 @@ export class List_booksComponent implements OnInit {
 
     return this.booksService.loadData().subscribe(
       (data) => {
-        // Handle successful response
         this.newArray = data;
       },
       (error) => {
-        // Handle error
         console.error('Error:', error);
       }
     );
   }
 
-  isBorrowBooksForm: any = false;
   // truyeenf duw lieuj dder bat tat madel
 
   setDataSearch(data: any) {
@@ -154,16 +151,12 @@ export class List_booksComponent implements OnInit {
   }
 
   //Chi tieets sachs ddeer suar
-  selectedItem: any;
   showModal(item: any): void {
     this.isVisible = true;
     this.selectedItem = item;
     this.isUpdateForm = true;
   }
 
-  //xử lý hàm cập nhật sách
-
-  borrowBooks: any;
   //Xử lý mượn sách
   hanldeMuon(item: any): void {
     this.borrowBooks = item;
@@ -226,18 +219,12 @@ export class List_booksComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = true;
-    // this.booksService.getTypeData(1).subscribe((data: any) => {
-    //   this.typeBooks = data.metadata;
-    // });
-
     this.booksService.getDataValueType(1).subscribe(
       (data) => {
-        // Handle successful response
         this.newArray = data;
         this.isLoading = false;
       },
       (error) => {
-        // Handle error
         console.error('Error:', error);
       }
     );
@@ -247,14 +234,12 @@ export class List_booksComponent implements OnInit {
   onPageChange(page: number): void {
     this.isLoading = true;
 
-    this.booksService.getDataValueType(1).subscribe(
+    this.booksService.getDataValueType(page).subscribe(
       (data) => {
-        // Handle successful response
         this.newArray = data;
         this.isLoading = false;
       },
       (error) => {
-        // Handle error
         console.error('Error:', error);
       }
     );

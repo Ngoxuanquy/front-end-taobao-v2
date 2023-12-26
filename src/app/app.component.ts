@@ -34,6 +34,8 @@ import { AuthService } from './auth/services/auth.service';
   ],
 })
 export class AppComponent implements OnInit {
+  isCollapsed = false;
+
   constructor(
     private cookieService: CookieService,
     private authService: AuthService,
@@ -42,7 +44,6 @@ export class AppComponent implements OnInit {
 
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
-  isCollapsed = false;
   @HostBinding('@.disabled')
   getRouteAnimationData() {
     return this.contexts.getContext('primary')?.route?.snapshot?.data?.[

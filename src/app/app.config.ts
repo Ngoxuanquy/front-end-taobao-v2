@@ -39,6 +39,7 @@ export const appConfig: ApplicationConfig = {
     provideNzI18n(vi_VN),
     importProvidersFrom(FormsModule),
     importProvidersFrom(HttpClientModule),
+    provideHttpClient(withFetch()),
     provideAnimations(),
     {
       provide: HTTP_INTERCEPTORS,
