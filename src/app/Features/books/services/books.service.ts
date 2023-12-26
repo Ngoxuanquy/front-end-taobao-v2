@@ -19,7 +19,7 @@ export class BooksService {
     private http: HttpClient,
     private message: NzMessageService,
     private router: Router,
-    private initializeAppService: InitializeAppService
+    private initializeAppService: InitializeAppService,
   ) {
     // Assuming this code is part of a component
     this.apiUrl = this.initializeAppService.getApiUrl();
@@ -48,7 +48,7 @@ export class BooksService {
           });
           this.router.navigate(['admin/listbooks']);
           // Process or log the data here
-        })
+        }),
       );
   }
 
@@ -62,7 +62,7 @@ export class BooksService {
           this.message.create('success', 'Xóa thành công!!!', {
             nzDuration: 3000,
           });
-        })
+        }),
       );
     } else {
       // Handle cancel or do nothing
@@ -86,7 +86,7 @@ export class BooksService {
             nzDuration: 3000,
           });
           // Handle the response if needed
-        })
+        }),
       );
   }
 
@@ -98,7 +98,7 @@ export class BooksService {
       catchError((error) => {
         console.error('Error fetching book data:', error);
         return throwError(error);
-      })
+      }),
     );
   }
 
@@ -110,7 +110,7 @@ export class BooksService {
       catchError((error) => {
         console.error('Error fetching type data:', error);
         return throwError(error);
-      })
+      }),
     );
   }
 
@@ -122,7 +122,7 @@ export class BooksService {
 
         this.newArray = this.datas.map((item1: any) => {
           const correspondingItem2 = this.dataTypes.find(
-            (item2: any) => item1.type === item2._id
+            (item2: any) => item1.type === item2._id,
           );
 
           if (correspondingItem2) {
@@ -140,7 +140,7 @@ export class BooksService {
       catchError((error) => {
         console.error('Error fetching data:', error);
         return throwError(error);
-      })
+      }),
     );
   }
   getDataValueType(page: any): Observable<any[]> {
@@ -153,7 +153,7 @@ export class BooksService {
 
             this.Arrays = this.books.map((book: any) => {
               const correspondingType = this.types.find(
-                (type: any) => book.type === type._id
+                (type: any) => book.type === type._id,
               );
 
               if (correspondingType) {
@@ -177,7 +177,7 @@ export class BooksService {
             // Emit the error using error() method
             observer.error(error);
             return throwError(error);
-          })
+          }),
         )
         .subscribe();
     });
@@ -191,14 +191,14 @@ export class BooksService {
     return this.getDataValueType(1).pipe(
       switchMap((data) => {
         const searchWithoutAccents = this.removeAccents(
-          name_text.toLowerCase()
+          name_text.toLowerCase(),
         );
 
         const results = data.filter(
           (book) =>
             this.removeAccents(book.name_book.toLowerCase()).includes(
-              searchWithoutAccents
-            ) && book.type === type_text
+              searchWithoutAccents,
+            ) && book.type === type_text,
         );
 
         console.log({ results });
@@ -209,7 +209,7 @@ export class BooksService {
         console.error('Error searching:', error);
         // You may want to throw the error here or handle it appropriately
         return throwError(error);
-      })
+      }),
     );
   }
   private handleError(operation = 'operation', result?: any) {

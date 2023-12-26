@@ -14,6 +14,9 @@ import { PLATFORM_ID, Inject } from '@angular/core';
 import { ChildrenOutletContexts, RouterLink } from '@angular/router';
 import { slideInAnimation } from './shared/animations';
 import { AuthService } from './auth/services/auth.service';
+import { LoaddingComponent } from './components/loadding/loadding.component';
+import { BehaviorSubject } from 'rxjs';
+import { SpinService } from './core/services/spin.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -25,6 +28,7 @@ import { AuthService } from './auth/services/auth.service';
     NzMenuModule,
     RouterModule,
     Layout_containerComponent,
+    LoaddingComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -35,14 +39,16 @@ import { AuthService } from './auth/services/auth.service';
 })
 export class AppComponent implements OnInit {
   isCollapsed = false;
+  public isLoading: any;
 
   constructor(
     private cookieService: CookieService,
     private authService: AuthService,
     private router: Router,
     private contexts: ChildrenOutletContexts,
+    private spinService: SpinService,
 
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
   @HostBinding('@.disabled')
   getRouteAnimationData() {
@@ -53,6 +59,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // const hasToken = this.cookieService.check('token');
+
     if (isPlatformBrowser(this.platformId)) {
       const hasToken = sessionStorage.getItem('token') !== null;
 

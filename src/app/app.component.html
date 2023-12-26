@@ -1,6 +1,17 @@
 <!-- <a [routerLink]="['']">Home</a>
 <a [routerLink]="['/auth/login']"> login </a> -->
 
-<div [@routeAnimations]="getRouteAnimationData()">
+<div [@routeAnimations]="getRouteAnimationData()" style="position: relative">
+  <div
+    style="
+      position: absolute;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      text-align: center;
+    "
+  >
+    <app-loadding></app-loadding>
+  </div>
   <router-outlet></router-outlet>
 </div>

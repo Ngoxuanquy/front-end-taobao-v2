@@ -23,6 +23,7 @@ import {
 import { Observable, firstValueFrom, tap } from 'rxjs';
 import { InitializeAppService } from './core/services/app-config.service';
 import { HeaderInterceptor } from './core/client/header-Http-Token';
+import { RepeatRequestInterceptor } from './core/Interceptor/spin.interceptor';
 registerLocaleData(vi);
 
 export function initializeApp(initializeAppService: InitializeAppService) {
@@ -53,6 +54,11 @@ export const appConfig: ApplicationConfig = {
       multi: true,
       // deps: [HttpClient],
       deps: [InitializeAppService, HttpClient],
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RepeatRequestInterceptor,
+      multi: true,
     },
   ],
 };

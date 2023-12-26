@@ -1,6 +1,6 @@
-<div class="isloading" *ngIf="isLoading == true">
+<!-- <div class="isloading" *ngIf="isLoading == true">
   <app-loadding></app-loadding>
-</div>
+</div> -->
 <form class="form" [formGroup]="searchs">
   <div>
     <label> Tìm kiếm theo tên sách </label>
@@ -55,23 +55,23 @@
       <td>{{ item.name_book }}</td>
       <td>{{ item.type }}</td>
       <td>{{ item.use_name }}</td>
-      <td>{{ item.borrowed_Day | date : "dd/MM/yyyy" }}</td>
-      <td>{{ item.paymentDate | date : "dd/MM/yyyy" }}</td>
-      <td>{{ item.payDay | date : "dd/MM/yyyy" }}</td>
+      <td>{{ item.borrowed_Day | date: "dd/MM/yyyy" }}</td>
+      <td>{{ item.paymentDate | date: "dd/MM/yyyy" }}</td>
+      <td>{{ item.payDay | date: "dd/MM/yyyy" }}</td>
       <td
         class="{{
           item.status === 'Đã trả'
             ? 'datra'
             : item.status === 'Mượn quá hạn'
-            ? 'muonquahan'
-            : 'chuatra'
+              ? 'muonquahan'
+              : 'chuatra'
         }}"
         title="{{
           item.status === 'Đã trả'
             ? 'Trả đúng hạn khi ngày trả sớm hơn ngày hẹn trả'
             : item.status === 'Mượn quá hạn'
-            ? 'Trả sai hạn khi ngày trả muộn hơn ngày hẹn trả (phạt)'
-            : 'Chưa trả sách'
+              ? 'Trả sai hạn khi ngày trả muộn hơn ngày hẹn trả (phạt)'
+              : 'Chưa trả sách'
         }}"
       >
         {{ item.status }}
@@ -116,9 +116,9 @@
       <td>{{ item.name_book }}</td>
       <td>{{ item.type }}</td>
       <td>{{ item.use_name }}</td>
-      <td>{{ item.borrowed_Day | date : "dd/MM/yyyy" }}</td>
-      <td>{{ item.paymentDate | date : "dd/MM/yyyy" }}</td>
-      <td>{{ item.payDay | date : "dd/MM/yyyy" }}</td>
+      <td>{{ item.borrowed_Day | date: "dd/MM/yyyy" }}</td>
+      <td>{{ item.paymentDate | date: "dd/MM/yyyy" }}</td>
+      <td>{{ item.payDay | date: "dd/MM/yyyy" }}</td>
       <td class="{{ item.status === 'Đã trả' ? 'datra' : 'chuatra' }}">
         {{ item.status }}
       </td>

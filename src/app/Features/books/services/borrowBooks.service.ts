@@ -13,19 +13,17 @@ import { InitializeAppService } from '../../../core/services/app-config.service'
 })
 export class BorrowBooksService {
   apiUrl = '';
+  datas: any;
+
   constructor(
     private cookieService: CookieService,
     private http: HttpClient,
     private message: NzMessageService,
     private router: Router,
-    private initializeAppService: InitializeAppService
+    private initializeAppService: InitializeAppService,
   ) {
     this.apiUrl = this.initializeAppService.getApiUrl();
-
-    console.log(this.apiUrl);
   }
-
-  datas: any;
 
   //lấy type để select
   getDataTypeBook(page: Number): Observable<any> {
@@ -33,7 +31,7 @@ export class BorrowBooksService {
       tap((data) => {
         return data;
       }),
-      catchError(this.handleError('getData', []))
+      catchError(this.handleError('getData', [])),
     );
   }
 
@@ -48,7 +46,7 @@ export class BorrowBooksService {
       catchError((error) => {
         // Log the error and rethrow it to propagate it to the subscriber
         throw error;
-      })
+      }),
     );
   }
 
@@ -66,12 +64,12 @@ export class BorrowBooksService {
     ) {
       // Xóa dấu của tên sản phẩm
       const searchWithoutAccents = this.removeAccents(
-        searchs.value.name_search.toLowerCase()
+        searchs.value.name_search.toLowerCase(),
       );
 
       // Xóa dấu của tên người mượns
       const searchName = this.removeAccents(
-        searchs.value.name_user.toLowerCase()
+        searchs.value.name_user.toLowerCase(),
       );
 
       console.log({ data: this.datas });
@@ -79,10 +77,10 @@ export class BorrowBooksService {
       const results = this.datas.metadata.filter(
         (book: any) =>
           this.removeAccents(book.name_book.toLowerCase()).includes(
-            searchWithoutAccents
+            searchWithoutAccents,
           ) &&
           book.type === searchs.value.selectedValue &&
-          this.removeAccents(book.use_name.toLowerCase()).includes(searchName)
+          this.removeAccents(book.use_name.toLowerCase()).includes(searchName),
       );
 
       console.log({ results });
@@ -115,7 +113,7 @@ export class BorrowBooksService {
           // Handle the response if needed
           // window.location.reload();
         }),
-        catchError(this.handleError('borrowBooks'))
+        catchError(this.handleError('borrowBooks')),
       );
   }
 
@@ -131,7 +129,7 @@ export class BorrowBooksService {
           // Handle error if needed
           console.error('Error deleting book', error);
           return throwError(error);
-        })
+        }),
       );
   }
 
@@ -152,13 +150,13 @@ export class BorrowBooksService {
             (error) => {
               // Handle error here
               console.error('Error reducing book quantity', error);
-            }
+            },
           );
         }),
         catchError((error) => {
           console.error('Error updating book', error);
           throw error; // Re-throw the error to propagate it further
-        })
+        }),
       );
   }
 
