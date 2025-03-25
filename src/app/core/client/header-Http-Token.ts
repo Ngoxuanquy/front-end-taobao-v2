@@ -35,14 +35,13 @@ export class HeaderInterceptor implements HttpInterceptor {
         setHeaders: {
           'Content-Type': 'application/json',
           authorization: `${accessToken}`,
-          'x-client-id': '657d3e90d1ac32569255dd26',
+          'x-client-id': '67d7c90187b4af33fb32f2d8',
           'x-api-key':
-            'de940ac5e7f01350b62ade467f356e3bfb1461304e227ca7084a77ce7859233e83643644860dbb64edbed99f936d79f1a8d82cf6513aaa90fbfd27b61195ab7a',
+            '87eaea1754825b4a90e5207db1bf1b9675d7144f462addac44de9c62f3093180f6c404f6ce4541f50df7ebe35e8f1d01dde1fa1677b4d496f26803e519294000',
         },
       });
     }
 
-    // Chuyển tiếp request đã được sửa đổi hoặc request ban đầu nếu không có accessToken
     return next.handle(modifiedRequest);
   }
 }

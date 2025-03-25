@@ -1,0 +1,14 @@
+<div class="product-card" *ngFor="let product of products">
+  <a [href]="product?.product_link || '#'">
+    <img
+      [src]="product?.product_thumb || 'assets/default-image.jpg'"
+      [alt]="product?.product_name || 'Product Image'"
+      class="product-image"
+    />
+    <div class="product-details">
+      <h3>{{ product?.product_name || 'Unnamed Product' }}</h3>
+      <p class="description">{{ product?.product_description || 'No description available' }}</p>
+      <p class="price">¥{{ product?.product_discount || product?.product_price || '0' }}</p>
+    </div>
+  </a>
+</div>

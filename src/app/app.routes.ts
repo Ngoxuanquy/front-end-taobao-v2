@@ -1,8 +1,15 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './auth/auth.guard'; // Corrected import
-import { LoginComponent } from './auth/login/login.component';
 
 export const routes: Routes = [
+  {
+    path: '',
+    loadChildren: () =>
+      import('./core/layout/layout-client/layout.routes').then(
+        (m) => m.CLIENT_ROUTES
+      ),
+
+  },
   {
     path: 'admin',
     // canActivate: [authGuard], // Corrected case
@@ -20,7 +27,7 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/admin',
+    redirectTo: '/',
     pathMatch: 'full',
   },
 ];

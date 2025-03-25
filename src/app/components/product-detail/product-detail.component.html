@@ -1,0 +1,76 @@
+<div class="product-detail-container">
+    <div class="product-image">
+      <img [src]="productEx.product_thumb" [alt]="productEx.product_name" />
+    </div>
+    <div class="product-info">
+      <h1>{{ productEx.product_name }}</h1>
+      <p class="price" *ngIf="productEx.product_discount && productEx.product_discount > 0">
+        <span class="original-price">{{ productEx.product_price }}đ</span>
+        <span class="discounted-price">{{ getDiscountedPrice() }}đ</span>
+      </p>
+      <p class="price" *ngIf="!productEx.product_discount || productEx.product_discount === 0">
+        {{ productEx.product_price }}đ
+      </p>
+
+      <p class="rating" *ngIf="productEx.product_ratingsAverage">
+        Đánh giá: {{ productEx.product_ratingsAverage }}/5
+      </p>
+
+      <div class="details">
+        <p><strong>Màu sắc:</strong> {{ selectedColor }}</p>
+        <p><strong>Size:</strong> {{ selectedSize }}</p>
+        <p><strong>Chất liệu:</strong> {{ selectedMaterial }}</p>
+        <p><strong>Kho:</strong> {{ productEx.product_quantity }} sản phẩm</p>
+      </div>
+
+      <div class="quantity-selector">
+        <button (click)="decreaseQuantity()">-</button>
+        <span>{{ quantity }}</span>
+        <button (click)="increaseQuantity()">+</button>
+      </div>
+
+      <div class="size-selector" *ngIf="productEx.product_attributes.sizes">
+        <p>Kích thước:</p>
+        <div class="size-options">
+          <button
+            *ngFor="let size of productEx.product_attributes.sizes"
+            (click)="selectSize(size)"
+            [class.selected]="selectedSize === size">
+            {{ size }}
+          </button>
+        </div>
+      </div>
+
+      <div class="color-selector" *ngIf="productEx.product_variations">
+        <p>Màu sắc:</p>
+        <div class="color-options">
+          <button
+            *ngFor="let variation of productEx.product_variations"
+            (click)="selectColor(variation.color)"
+            [class.selected]="selectedColor === variation.color">
+            {{ variation.color }}
+          </button>
+        </div>
+      </div>
+
+      <div class="material-selector">
+        <p>Chất liệu:</p>
+        <div class="material-options">
+          <button
+            (click)="selectMaterial(productEx.product_attributes.material)"
+            [class.selected]="selectedMaterial === productEx.product_attributes.material">
+            {{ productEx.product_attributes.material }}
+          </button>
+        </div>
+      </div>
+
+      <p class="product-code">Mã sản phẩm: {{ productEx.id }}</p>
+
+      <button class="add-to-cart" (click)="addToCart()">THÊM VÀO GIỎ</button>
+
+
+      <div class="share">
+        <p>Chia sẻ: <a href="#"><i class="fab fa-facebook-f"></i></a> <a href="#"><i class="fab fa-instagram"></i></a></p>
+      </div>
+    </div>
+  </div>

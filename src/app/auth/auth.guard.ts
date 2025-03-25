@@ -26,11 +26,11 @@ export class authGuard implements CanActivate {
   ): boolean | UrlTree | Observable<boolean | UrlTree> {
     // Check if sessionStorage is defined
     if (typeof sessionStorage !== 'undefined') {
-      if (!this.authService.isLoggedIn) {
-        // Use navigateByUrl instead of createUrlTree to navigate to the login page
-        this.router.navigateByUrl('/auth/login');
-        return false;
-      }
+      // if (!this.authService.isLoggedIn) {
+      //   // Use navigateByUrl instead of createUrlTree to navigate to the login page
+      //   this.router.navigateByUrl('/auth/login');
+      //   return false;
+      // }
 
       return true;
     } else {

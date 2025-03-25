@@ -16,7 +16,6 @@ import {
   query,
   stagger,
 } from '@angular/animations';
-import { TypeBooksComponent } from '../../../pages/typeBooks/typeBooks.component';
 @Component({
   selector: 'app-layout_container',
   standalone: true,
@@ -27,7 +26,6 @@ import { TypeBooksComponent } from '../../../pages/typeBooks/typeBooks.component
     NzLayoutModule,
     NzMenuModule,
     RouterModule,
-    TypeBooksComponent,
     NzPopoverModule,
   ],
   templateUrl: './layout_container.component.html',

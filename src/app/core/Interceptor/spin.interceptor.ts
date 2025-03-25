@@ -24,16 +24,16 @@ export class RepeatRequestInterceptor implements HttpInterceptor {
     this.number++;
 
     return next.handle(request).pipe(
-      finalize(() => {
-        this.number--;
-        console.log('còn');
-        this.spinService.setIsLoad(true);
+      // finalize(() => {
+      //   this.number--;
+      //   console.log('còn');
+      //   this.spinService.setIsLoad(true);
 
-        if (this.number === 0) {
-          console.log('hết');
-          this.spinService.setIsLoad(false);
-        }
-      }),
+      //   if (this.number === 0) {
+      //     console.log('hết');
+      //     this.spinService.setIsLoad(false);
+      //   }
+      // }),
     );
   }
 }
