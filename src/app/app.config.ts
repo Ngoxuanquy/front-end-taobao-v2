@@ -42,11 +42,11 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(HttpClientModule),
     provideHttpClient(withFetch()),
     provideAnimations(),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HeaderInterceptor,
-      multi: true,
-    },
+    // {
+    //   // provide: HTTP_INTERCEPTORS,
+    //   // useClass: HeaderInterceptor,
+    //   // multi: true,
+    // },
     provideHttpClient(),
     {
       provide: APP_INITIALIZER,

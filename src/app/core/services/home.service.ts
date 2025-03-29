@@ -1,32 +1,31 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import { HttpClientService } from './http-client.serivce';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HomeService {
-  private apiUrl: string = '';
+  private apiUrl: string = 'http://localhost:3056/v1/api';
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(
+    private http: HttpClient,
+    private httpClient: HttpClientService,
+  ) {}
 
   public getApiUrl(): string {
     return this.apiUrl;
   }
 
-  public getAllProduct(): Observable<any> {
-    return this.http.get(`http://localhost:3056/v1/api/product/getAll`).pipe(
-      tap((data: any) => {
-        return data.metadata;
-      }),
+  public getAllProducts(): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}/product/getAll`).pipe(
+      tap((response) => console.log('Products Loaded:', response.metadata)),
       catchError((error) => {
-        console.error('Error loading app configuration', error);
-        throw error; // Rethrow the error to let the app fail gracefully
+        console.error('Error fetching products:', error);
+        return throwError(() => new Error('Failed to load products'));
       })
     );
   }
-
-
 }
