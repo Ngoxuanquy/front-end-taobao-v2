@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { HttpClientService } from './http-client.serivce';
@@ -8,7 +9,7 @@ import { HttpClientService } from './http-client.serivce';
   providedIn: 'root',
 })
 export class HomeService {
-  private apiUrl: string = 'http://localhost:3056/v1/api';
+  private apiUrl = environment.apiUrl;
 
   constructor(
     private httpClient: HttpClientService,

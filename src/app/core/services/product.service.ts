@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { tap, shareReplay, finalize, retryWhen, mergeMap, take, catchError } from 'rxjs/operators';
@@ -7,7 +8,7 @@ import { HttpClientService } from './http-client.serivce';
     providedIn: 'root'
   })
 export class ProductService {
-  private apiUrl: string = 'http://localhost:3056/v1/api';
+  private apiUrl = environment.apiUrl;
   constructor(
     private httpClient: HttpClientService
   ) {

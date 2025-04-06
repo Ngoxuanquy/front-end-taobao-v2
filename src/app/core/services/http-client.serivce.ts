@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { tap, shareReplay, finalize, retryWhen, mergeMap, take, catchError } from 'rxjs/operators';
@@ -9,7 +10,7 @@ import { SpinService } from './spin.service';
 export class HttpClientService {
   public cache: any = {};
   private headers = new HttpHeaders({
-    'x-api-key': '87eaea1754825b4a90e5207db1bf1b9675d7144f462addac44de9c62f3093180f6c404f6ce4541f50df7ebe35e8f1d01dde1fa1677b4d496f26803e519294000',
+    'x-api-key': environment.apiKey,
     'Content-Type': 'application/json',
   });
   constructor(
