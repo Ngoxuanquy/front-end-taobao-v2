@@ -2,10 +2,18 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { tap, shareReplay, finalize, retryWhen, mergeMap, take, catchError } from 'rxjs/operators';
+import {
+  tap,
+  shareReplay,
+  finalize,
+  retryWhen,
+  mergeMap,
+  take,
+  catchError,
+} from 'rxjs/operators';
 import { SpinService } from './spin.service';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HttpClientService {
   public cache: any = {};
@@ -16,16 +24,15 @@ export class HttpClientService {
   constructor(
     private http: HttpClient,
     private readonly loadingService: SpinService,
-  ) { }
+  ) {}
 
   get<T>(url: string): Observable<T> {
     return this.http.get<T>(url, { headers: this.headers }).pipe(
-      tap(res => {
-      }),
+      tap((res) => {}),
       catchError((error) => {
         console.error('HTTP GET Error:', error);
         return throwError(() => new Error(`Request failed: ${error.message}`));
-      })
+      }),
     );
   }
 
@@ -34,7 +41,7 @@ export class HttpClientService {
       catchError((error) => {
         console.error('HTTP POST Error:', error);
         return throwError(() => new Error(`Request failed: ${error.message}`));
-      })
+      }),
     );
   }
 }

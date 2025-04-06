@@ -1,10 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { LoaddingComponent } from '../../components/loadding/loadding.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
-
+import { NgOtpInputComponent } from 'ng-otp-input';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -12,25 +17,29 @@ import { AuthService } from '../services/auth.service';
     LoaddingComponent,
     RouterModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    NgOtpInputComponent,
   ],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
   isLoading = false;
   registerForm: FormGroup;
-
+  otpValue: string = '';
   constructor(
     private fb: FormBuilder,
-    public authService: AuthService
+    public authService: AuthService,
   ) {
-    this.registerForm = this.fb.group({
-      username: ['', Validators.required],
-      email: ['', Validators.required],
-      password: ['', Validators.required],
-      confirmPassword: ['', Validators.required]
-    }, { validators: this.passwordMatchValidator });
+    this.registerForm = this.fb.group(
+      {
+        username: ['', Validators.required],
+        email: ['', Validators.required],
+        password: ['', Validators.required],
+        confirmPassword: ['', Validators.required],
+      },
+      { validators: this.passwordMatchValidator },
+    );
   }
 
   passwordMatchValidator(form: FormGroup) {
@@ -45,13 +54,21 @@ export class RegisterComponent {
       const formData = this.registerForm.value;
       console.log('Registering user:', formData);
       this.authService.register(this.registerForm.value).subscribe({
-        next: () => console.log('Đăng ký thành công'),
-        error: (err) => console.log(err.message)
+        next: () => {
+          this.isLoading = false;
+        },
+        error: (err) => console.log(err.message),
       });
-      
-      setTimeout(() => this.isLoading = false, 1000);
     } else {
       this.registerForm.markAllAsTouched();
     }
+  }
+  onOtpChange(value: string) {
+    this.authService
+      .verifileEmail({ ...this.registerForm.value, code: value })
+      .subscribe({
+        next: () => console.log('Đăng ký thành công'),
+        error: (err) => console.log(err.message),
+      });
   }
 }
