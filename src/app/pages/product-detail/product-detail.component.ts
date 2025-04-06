@@ -1,4 +1,4 @@
-import { ProductService } from './../../core/services/product.service';
+import { ProductService } from '../../core/services/product.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../models/product.model';
@@ -25,7 +25,8 @@ export class ProductDetailComponent implements OnInit{
     private route: ActivatedRoute,
   ) { }
   ngOnInit(): void {
-    this.productId = this.route.snapshot.paramMap.get('id') || '';
+    this.productId = this.route.snapshot.paramMap.get('productId') || '';
+    console.log({productId: this.productId})
     this.getProductDetail();
     this.selectedColor = this.productDetail.product_attributes.color;
     this.selectedMaterial = this.productDetail.product_attributes.material;

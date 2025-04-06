@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HomeService } from '../../core/services/home.service';
-import { ProductDetailComponent } from '../../components/product-detail/product-detail.component';
+import { ProductDetailComponent } from '../product-detail/product-detail.component';
 import { ProductComponent } from '../../components/product/product.component';
 import { catchError, throwError } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
