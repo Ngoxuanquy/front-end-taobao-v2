@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './auth/auth.guard'; // Corrected import
+import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,8 @@ export const routes: Routes = [
         (m) => m.LOGIN_ROUTES
       ),
   },
+  { path: 'product/:id',
+    component: ProductDetailComponent },
   {
     path: '**',
     redirectTo: '/',

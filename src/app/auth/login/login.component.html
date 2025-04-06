@@ -16,7 +16,10 @@
       >Vui lòng nhập mật khẩu</span
     >
     <p>
-      <button type="button" (click)="login()">Login</button>
+      <button type="button" (click)="login()">Đăng nhập</button>
     </p>
   </form>
+  <div>Bạn chưa có tài khoản ? 
+    <a [routerLink]="['/auth/register']"> Đăng ký</a>
+  </div>
 </div>

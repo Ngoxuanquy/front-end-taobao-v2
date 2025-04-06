@@ -1,0 +1,17 @@
+body {
+    margin: 0;
+    padding: 0;
+  }
+  
+.product-list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 10px;
+  }
+  
+  app-product {
+    flex: 0 0 auto;
+    display: flex;
+  }

@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output, inject } from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
+import { NavigationExtras, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
   FormControl,
@@ -25,10 +25,10 @@ import { InitializeAppService } from '../../core/services/app-config.service';
   standalone: true,
   imports: [
     CommonModule,
-    LoginComponent,
     ReactiveFormsModule,
     HttpClientModule,
     LoaddingComponent,
+    RouterModule
   ],
 })
 export class LoginComponent implements OnInit {
@@ -37,14 +37,7 @@ export class LoginComponent implements OnInit {
     password: new FormControl(''),
   });
 
-  public credentials: any = {
-    email: this.login_value.value.email,
-    password: this.login_value.value.password,
-  };
-
   cookieService = inject(CookieService);
-  @Output() newItemEvent = new EventEmitter<string>();
-
   constructor(
     private http: HttpClient, // Injecting the HttpClient service
     public authService: AuthService, // Injecting the AuthService service
@@ -55,7 +48,7 @@ export class LoginComponent implements OnInit {
 
   isLoading: any = false;
   login() {
-    this.authService.login(this.login_value).subscribe(
+    this.authService.login(this.login_value.value).subscribe(
       (success: any) => {
         // Handle success if needed
       },
