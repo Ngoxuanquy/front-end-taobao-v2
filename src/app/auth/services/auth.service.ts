@@ -28,8 +28,6 @@ export class AuthService {
   }
 
   login(login_value: any): Observable<any> {
-    console.log('login', login_value);
-    
     if (!login_value?.email || !login_value?.password) {
       alert('Vui lòng nhập đủ thông tin');
       return throwError(() => new Error('Thiếu email hoặc mật khẩu'));
@@ -67,4 +65,52 @@ export class AuthService {
   setIsLogin(state: boolean) {
     this.isLoggedIn = state;
   }
+
+  register(register_value: any): Observable<any> {
+    const { email, password, confirmPassword, username } = register_value;
+  
+    // Kiểm tra các trường bắt buộc
+    if (!email || !password || !confirmPassword || !username) {
+      alert('Vui lòng nhập đầy đủ thông tin');
+      return throwError(() => new Error('Thiếu thông tin đăng ký'));
+    }
+  
+    // Kiểm tra xác nhận mật khẩu
+    if (password !== confirmPassword) {
+      alert('Mật khẩu xác nhận không khớp');
+      return throwError(() => new Error('Mật khẩu xác nhận không khớp'));
+    }
+  
+    
+    // Thực hiện gọi API đăng ký
+    return this.HttpClientService
+      .post<any>(`${this.apiUrl}/shop/signup`, {
+        name: username,
+        email,
+        password
+      })
+      .pipe(
+        switchMap((response: any) => {
+          console.log('response0', response);
+          
+          if (response?.msg === 'Email đã được đăng ký!!') {
+            alert('Email đã tồn tại. Vui lòng thử lại với email khác.');
+            return throwError(() => new Error('Email đã được đăng ký'));
+          }
+  
+          if (response?.metadata?.status === 'Register OK') {
+            alert('Đăng ký thành công! Vui lòng đăng nhập');
+            return from(this.router.navigate(['/auth/login']));
+          } else {
+            alert('Đăng ký thất bại: ' + (response?.metadata?.message || 'Không rõ lý do'));
+            return throwError(() => new Error('Đăng ký thất bại'));
+          }
+        }),
+        catchError((error) => {
+          console.error('Register Error:', error);
+          return throwError(() => new Error('Đăng ký thất bại, vui lòng thử lại.'));
+        })
+      );
+  }  
+  
 }

@@ -1,0 +1,48 @@
+<div class="container">
+    <div class="isloading" *ngIf="isLoading == true">
+      <app-loadding></app-loadding>
+    </div>
+    <form [formGroup]="registerForm">
+      <h2>Đăng ký</h2>
+  
+      <label for="username">Tên người dùng:</label>
+      <input id="username" type="text" formControlName="username" />
+      <span class="error" *ngIf="registerForm.get('username')?.hasError('required')">
+        Vui lòng nhập tên người dùng
+      </span>
+      <br />
+  
+      <label for="email">Email:</label>
+      <input id="email" type="text" formControlName="email" />
+      <span class="error" *ngIf="registerForm.get('email')?.hasError('required')">
+        Vui lòng nhập email
+      </span>
+      <br />
+  
+      <label for="password">Mật khẩu:</label>
+      <input id="password" type="password" formControlName="password" />
+      <span class="error" *ngIf="registerForm.get('password')?.hasError('required')">
+        Vui lòng nhập mật khẩu
+      </span>
+      <br />
+  
+      <label for="confirmPassword">Xác nhận mật khẩu:</label>
+      <input id="confirmPassword" type="password" formControlName="confirmPassword" />
+      <span class="error" *ngIf="registerForm.get('confirmPassword')?.hasError('required')">
+        Vui lòng xác nhận mật khẩu
+      </span>
+      <span class="error" *ngIf="registerForm.hasError('passwordMismatch')">
+        Mật khẩu không khớp
+      </span>
+      <br />
+  
+      <p>
+        <button type="button" (click)="register()">Đăng ký</button>
+      </p>
+    </form>
+  
+    <div>Đã có tài khoản?
+      <a [routerLink]="['/auth/login']">Đăng nhập</a>
+    </div>
+  </div>
+  

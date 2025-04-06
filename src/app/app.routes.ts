@@ -26,10 +26,11 @@ export const routes: Routes = [
         (m) => m.LOGIN_ROUTES
       ),
   },
+  { path: 'product/:id',
+    component: ProductDetailComponent },
   {
     path: '**',
     redirectTo: '/',
     pathMatch: 'full',
   },
-  { path: 'product/:id', component: ProductDetailComponent },
 ];

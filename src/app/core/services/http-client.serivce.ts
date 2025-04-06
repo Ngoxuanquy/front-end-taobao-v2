@@ -19,6 +19,8 @@ export class HttpClientService {
 
   get<T>(url: string): Observable<T> {
     return this.http.get<T>(url, { headers: this.headers }).pipe(
+      tap(res => {
+      }),
       catchError((error) => {
         console.error('HTTP GET Error:', error);
         return throwError(() => new Error(`Request failed: ${error.message}`));

@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output, inject } from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
+import { NavigationExtras, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
   FormControl,
@@ -28,6 +28,7 @@ import { InitializeAppService } from '../../core/services/app-config.service';
     ReactiveFormsModule,
     HttpClientModule,
     LoaddingComponent,
+    RouterModule
   ],
 })
 export class LoginComponent implements OnInit {

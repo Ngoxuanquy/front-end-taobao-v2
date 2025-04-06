@@ -1,6 +1,8 @@
+import { ProductService } from './../../core/services/product.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../models/product.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-product-detail',
@@ -12,43 +14,25 @@ import { Product } from '../../models/product.model';
   ]
 })
 export class ProductDetailComponent implements OnInit{
-  productEx!: Product;
+  productId = '';
+  productDetail!: any;
   selectedSize = 'S';
   selectedColor: any;
   selectedMaterial: any;
   quantity = 1;
+  constructor(
+    private productService : ProductService,
+    private route: ActivatedRoute,
+  ) { }
   ngOnInit(): void {
-    // Ở đây bạn có thể gọi API để lấy dữ liệu sản phẩm dựa trên _id
-    // Ví dụ: this.productService.getProductById(this.product._id).subscribe(data => this.product = data);
-    this.productEx = {
-      id: 'aaaaa',
-      product_name: 'Váy trắng cúp ngực đẹp kiểu dáng đơn giản, hiện đại #3151',
-      product_thumb: 'https://bizweb.dktcdn.net/100/368/426/products/vay-trang-cup-nguc-dep.jpg?v=1739251870663', // Ảnh placeholder
-      product_description: 'Váy trắng thanh lịch, phù hợp cho các buổi tiệc hoặc sự kiện.',
-      product_price: 890000,
-      product_quantity: 1,
-      product_attributes: {
-        color: 'Trắng',
-        sizes: ['S', 'M', 'L'],
-        material: 'Tafta Hàn cao cấp'
-      },
-      product_discount: 0,
-      product_ratingsAverage: 4.5,
-      product_variations: [
-        { color: 'Trắng', available: true },
-        { color: 'Đỏ', available: true }
-      ],
-      isDraft: false,
-      isPublished: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    this.selectedColor = this.productEx.product_attributes.color;
-    this.selectedMaterial = this.productEx.product_attributes.material;
+    this.productId = this.route.snapshot.paramMap.get('id') || '';
+    this.getProductDetail();
+    this.selectedColor = this.productDetail.product_attributes.color;
+    this.selectedMaterial = this.productDetail.product_attributes.material;
   }
 
   increaseQuantity() {
-    if (this.quantity < this.productEx.product_quantity) {
+    if (this.quantity < this.productDetail.product_quantity) {
       this.quantity++;
     }
   }
@@ -61,7 +45,7 @@ export class ProductDetailComponent implements OnInit{
   }
 
   addToCart() {
-    alert(`Đã thêm ${this.productEx.product_name} vào giỏ hàng!`);
+    alert(`Đã thêm ${this.productDetail.product_name} vào giỏ hàng!`);
     // Ở đây bạn có thể gọi một service để thêm sản phẩm vào giỏ hàng
   }
 
@@ -79,10 +63,22 @@ export class ProductDetailComponent implements OnInit{
 
   // Tính giá sau khi giảm (nếu có)
   getDiscountedPrice(): number {
-    if (this.productEx.product_discount && this.productEx.product_discount > 0) {
-      return this.productEx.product_price * (1 - this.productEx.product_discount / 100);
+    if (this.productDetail.product_discount && this.productDetail.product_discount > 0) {
+      return this.productDetail.product_price * (1 - this.productDetail.product_discount / 100);
     }
-    return this.productEx.product_price;
+    return this.productDetail.product_price;
+  }
+
+  getProductDetail(): void {
+    this.productService.getDetailProduct(this.productId).subscribe(
+      (data) => {
+        this.productDetail = data.metadata;
+        console.log(this.productDetail);
+      },
+      (error) => {
+        console.error('Error loading product details:', error);
+      }
+    );
   }
 
 

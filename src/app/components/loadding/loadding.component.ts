@@ -8,7 +8,10 @@ import { Observable, of } from 'rxjs';
   templateUrl: './loadding.component.html',
   styleUrls: ['./loadding.component.css'],
   standalone: true,
-  imports: [LoaddingComponent, NzSpinModule, CommonModule],
+  imports: [
+    NzSpinModule,
+    CommonModule
+  ],
 })
 export class LoaddingComponent implements OnInit {
   isLoading$: Observable<boolean> = of(false);
@@ -16,6 +19,5 @@ export class LoaddingComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading$ = this.spinService.isLoading$;
-    console.log(this.isLoading$);
   }
 }
