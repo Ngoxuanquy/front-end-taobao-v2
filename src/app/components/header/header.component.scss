@@ -11,6 +11,8 @@
 }
 
 .taobao-header {
+  display: flex;
+  flex-direction: column;
   background-color: #fff;
   color: #666;
   font-size: 12px;
@@ -79,6 +81,10 @@
       margin-right: 4px;
     }
   }
+}
+
+.shopping-cart {
+  margin-left: auto;
 }
 
 .main-header {

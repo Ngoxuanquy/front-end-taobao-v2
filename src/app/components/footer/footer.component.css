@@ -1,0 +1,19 @@
+.footer-page {
+    background-color: black;
+    color: white;
+    padding: 30px 50px 30px 100px;
+    margin-top: 30px;
+
+    .navbar-item-title {
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .footer-detail {
+        display: flex;
+        .footer-navbar-item {
+            width: 33.3333%;
+        }
+    }
+}

@@ -41,31 +41,34 @@
     </div>
   </div>
 
+  <a class="shopping-cart">
+    <img src="https://fansport.vn/default/template/img/cart-empty.png" alt="Logo" style="width: 70px;"/>
+  </a>
+
   <!-- Main header with logo and search -->
   <div class="main-header">
     <div class="container">
-      <div class="search-box">
-         <div class="search-box-el">
-          <div class="logo">
-           <a href="/">
-          <img src="https://img.alicdn.com/imgextra/i1/O1CN011YZ3P01zMCE6HGyhk_!!6000000006699-2-tps-480-144.png" alt="Taobao.com">
-           </a>
-      </div>
-        <div class="search-tabs">
-          <div class="search-input-container">
-            <input
-              type="text"
-              [(ngModel)]="searchQuery"
-              placeholder="tìm kiếm sản phẩm"
-              class="search-input">
-            <button class="search-button" (click)="onSearch()">tìm kiếm</button>
+        <div class="search-box">
+          <div class="search-box-el">
+            <div class="logo">
+              <a href="/">
+                  <img src="https://img.alicdn.com/imgextra/i1/O1CN011YZ3P01zMCE6HGyhk_!!6000000006699-2-tps-480-144.png" alt="Taobao.com">
+              </a>
+            </div>
+            <div class="search-tabs">
+              <div class="search-input-container">
+                <input
+                  type="text"
+                  [(ngModel)]="searchQuery"
+                  placeholder="tìm kiếm sản phẩm"
+                  class="search-input">
+                <button class="search-button" (click)="onSearch()">Tìm kiếm</button>
+              </div>
+              <div class="image-search">
+                <a href="#"><i class="fas fa-camera"></i> Tìm kiếm cùng một mục</a>
+              </div>
+            </div>
           </div>
-          <div class="image-search">
-            <a href="#"><i class="fas fa-camera"></i> Tìm kiếm cùng một mục</a>
-          </div>
-        </div>
-         </div>
-
         </div>
 
         <div class="hot-searches">
@@ -77,9 +80,8 @@
           <a href="#" class="hot-link">Bộ đồ làm sạch nước nóng</a>
           <a href="#" class="hot-link">Quần áo nữ Châu Âu mới 2023</a>
         </div>
-
       </div>
-    </div>
+  </div>
 
   <!-- Main navigation -->
   <nav class="main-nav">
